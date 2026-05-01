@@ -1,0 +1,96 @@
+[[extend 'layout.html']]
+<style>
+    .card-image-fit {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* or "cover" if you want full bleed */
+}
+
+
+
+</style>
+<section class="hero is-small is-primary is-bold">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+
+      <div class="hero-title-wrapper">
+        <h1 class="title is-2">
+          phuEGO — Functional Enrichment for Omics Data
+        </h1>
+      </div>
+      <p class="subtitle is-5 mt-3">
+        Explore, visualize, and interpret Omics data
+      </p>
+
+    </div>
+  </div>
+</section>
+
+
+<div class="container is-max-desktop mt-4">
+  <section class="featured">
+    <div class="columns is-multiline is-centered">
+
+      <!-- Row 1: 3 cards -->
+      <div class="column is-4">
+        <article class="box has-text-centered">
+          <figure class="image is-5by3 mb-3">
+            <img src="[[=URL('static/img/phuego.png')]]" class="card-image-fit"/>
+          </figure>
+          <h2 class="title is-5">phuEGO</h2>
+          <p>Classical enrichment workflow for phosphoproteomics datasets.</p>
+          <a href="[[=URL('submit')]]" class="button is-link is-light mt-3">Submit</a>
+        </article>
+      </div>
+
+      <div class="column is-4">
+        <article class="box has-text-centered">
+          <figure class="image is-5by3 mb-3">
+            <img src="[[=URL('static/img/scphuego.png')]]" class="card-image-fit" />
+          </figure>
+          <h2 class="title is-5">scphuEGO</h2>
+          <p>Single-cell phuEGO enrichment and visualization module.</p>
+          <a href="[[=URL('sc_phuego_submit')]]" class="button is-link is-light mt-3">Submit</a>
+        </article>
+      </div>
+
+      <div class="column is-4">
+        <article class="box has-text-centered">
+          <figure class="image is-5by3 mb-3">
+            <img src="[[=URL('static/img/custom_phuego.png')]]" class="card-image-fit"/>
+          </figure>
+          <h2 class="title is-5">Custom phuEGO</h2>
+          <p>Custom phuEGO enrichment and visualization module.</p>
+          <a href="[[=URL('custom_phuego_submit')]]" class="button is-link is-light mt-3">Submit</a>
+        </article>
+      </div>
+
+<!-- Row 2: centered cards -->
+<div class="columns is-centered">
+
+  <div class="column is-4">
+    <article class="box has-text-centered">
+      <figure class="image is-5by3 mb-3">
+        <img src="[[=URL('static/img/retrieve.png')]]" class="card-image-fit">
+      </figure>
+      <h2 class="title is-5">Retrieve</h2>
+      <p>Access and review stored analyses and datasets.</p>
+      <a href="[[=URL('retrieve')]]" class="button is-link is-light mt-3">Retrieve</a>
+    </article>
+  </div>
+
+  <div class="column is-4">
+    <article class="box has-text-centered">
+      <figure class="image is-5by3 mb-3">
+        <img src="[[=URL('static/img/about.png')]]" class="card-image-fit">
+      </figure>
+      <h2 class="title is-5">About</h2>
+      <p>Learn more about phuEGO, its features, and methodology.</p>
+      <a href="[[=URL('about')]]" class="button is-link is-light mt-3">Read more</a>
+    </article>
+  </div>
+
+</div>
+
+  </section>
+</div>

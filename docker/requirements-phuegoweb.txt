@@ -1,0 +1,10 @@
+py4web
+numpy<2.4
+pandas
+scipy
+scikit-learn
+python-igraph
+leidenalg
+tqdm
+PyYAML
+matplotlib

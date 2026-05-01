@@ -1,0 +1,295 @@
+[[extend "layout.html"]]
+
+<style>
+.about-hero {
+  background: #f3f6fb;
+  border-bottom: 1px solid #e3e8f0;
+}
+.about-card {
+  border: 1px solid #e6e9ef;
+  border-radius: 8px;
+  padding: 1.25rem;
+  height: 100%;
+}
+.about-pre {
+  background: #f7f9fc;
+  border: 1px solid #e6e9ef;
+  border-radius: 6px;
+  padding: 1rem;
+  white-space: pre;
+  overflow: auto;
+}
+.term-code {
+  font-family: monospace;
+  font-weight: 700;
+}
+</style>
+
+<section class="section about-hero">
+  <div class="container">
+    <h1 class="title is-2">phuEGOweb</h1>
+    <p class="subtitle is-5">
+      Web interface for running phuEGO, exploring propagated networks, and interpreting enrichment-driven modules.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="content">
+      <h2>What phuEGOweb Does</h2>
+      <p>
+        phuEGOweb runs a network propagation workflow from submitted proteins or genes, separates increased and decreased signals, decomposes the propagated signal into seed-centred ego networks, merges related egos into modules, and reports network, table, enrichment, and cross-experiment outputs.
+      </p>
+      <p>
+        Enrichment uses the annotation files bundled with the selected network under
+        <code>support_data/support_data_&lt;network&gt;/genesets</code>. In manifests this is reported as
+        <code>"fisher_background": "Network"</code>, because the effective Fisher background is the selected network's annotated nodes.
+      </p>
+    </div>
+
+    <hr>
+
+    <div class="content">
+      <h2>Submission Forms</h2>
+    </div>
+
+    <div class="columns">
+      <div class="column">
+        <div class="about-card">
+          <h3 class="title is-5">Phospho phuEGO</h3>
+          <p>
+            Use this for phosphoproteomics-style inputs where each row is a phosphoprotein or protein identifier and a signed log-fold change.
+          </p>
+          <pre class="about-pre">&gt;EGF_vs_Untreated
+P00533  2.48
+Q8TD19  2.00
+P29317 -0.91
+P10398 -0.86</pre>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="about-card">
+          <h3 class="title is-5">Single Cell phuEGO</h3>
+          <p>
+            Use this for gene or UniProt log-fold-change lists. Gene names are converted to UniProt when present in the mapping file.
+          </p>
+          <pre class="about-pre">&gt;Cluster_1_vs_rest
+EGFR   1.80
+JUN    1.25
+MAPK1 -0.70
+STAT3 -1.10</pre>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="about-card">
+          <h3 class="title is-5">Custom phuEGO</h3>
+          <p>
+            Use this when you want to provide a layer for each seed. Each data row must contain identifier, LFC, and layer. Layers must be 1, 2, or 3.
+          </p>
+          <pre class="about-pre">&gt;Experiment_A
+P00533  2.48  1
+Q8TD19  2.00  2
+P29317 -0.91  1
+P10398 -0.86  3</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification is-light">
+      <strong>Input rules.</strong>
+      Start each experiment with <code>&gt;experiment_name</code>. Use tabs or spaces between columns. Positive LFC values are analysed as increased seeds; negative values are analysed as decreased seeds. Multi-experiment submissions create one result view per experiment plus cross-experiment summaries when available.
+    </div>
+
+    <hr>
+
+    <div class="content">
+      <h2>Parameter Meaning</h2>
+      <table class="table is-fullwidth is-striped">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Meaning</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Network</strong></td>
+            <td>Reference network and matching support-data folder. This also determines the Fisher enrichment background.</td>
+          </tr>
+          <tr>
+            <td><strong>First Propagation Damping</strong></td>
+            <td>Random-walk-with-restart damping for the first propagation from submitted seeds. Reanalysis keeps this fixed so existing RWR and p-values can be reused.</td>
+          </tr>
+          <tr>
+            <td><strong>First Propagation Significance</strong></td>
+            <td>P-value threshold applied to propagated RWR scores before ego decomposition.</td>
+          </tr>
+          <tr>
+            <td><strong>KDE Probability</strong></td>
+            <td>Cutoff used to retain seed-centred ego networks. <code>Optimal</code> searches cutoffs automatically; numeric values use the selected fixed cutoff.</td>
+          </tr>
+          <tr>
+            <td><strong>Zscore Semantic Similarity</strong></td>
+            <td>Semantic-similarity z-score threshold used when filtering ego nodes for functional coherence.</td>
+          </tr>
+          <tr>
+            <td><strong>Second Propagation Damping</strong></td>
+            <td>Damping used during ego decomposition.</td>
+          </tr>
+          <tr>
+            <td><strong>Minimum Ego Nodes</strong></td>
+            <td>Minimum size required for a seed-centred ego network to be retained.</td>
+          </tr>
+          <tr>
+            <td><strong>Third Propagation Damping</strong></td>
+            <td>Damping used during module detection and ego merging.</td>
+          </tr>
+          <tr>
+            <td><strong>Fisher Significance</strong></td>
+            <td>P-value threshold for enrichment outputs.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <div class="content">
+      <h2>Retrieve and Reanalysis</h2>
+      <p>
+        The Retrieve page accepts a previous UUID. It opens a summary page where you can view the existing results unchanged or launch a reanalysis.
+      </p>
+      <p>
+        Reanalysis creates a new UUID. The original run is kept intact. Input, network, and first propagation damping are fixed; existing <code>rwr_scores.txt</code> and <code>pvalues.txt</code> are copied and reused when present. You can change the downstream thresholds and module/enrichment parameters.
+      </p>
+    </div>
+
+    <hr>
+
+    <div class="content">
+      <h2>How to Interpret Results</h2>
+
+      <h3>Top Summary</h3>
+      <p>
+        The dashboard is a compact run summary. Values are split into increased and decreased directions, matching positive and negative LFC seeds.
+      </p>
+      <table class="table is-fullwidth is-striped">
+        <thead>
+          <tr>
+            <th>Statistic</th>
+            <th>How to read it</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Seeds</strong></td>
+            <td>Submitted proteins or genes after parsing the input, separated by sign of LFC.</td>
+          </tr>
+          <tr>
+            <td><strong>In graph</strong></td>
+            <td>Submitted seeds that are present in the selected input network. Missing seeds cannot be propagated.</td>
+          </tr>
+          <tr>
+            <td><strong>RWR</strong></td>
+            <td>Network nodes passing the random-walk-with-restart significance threshold.</td>
+          </tr>
+          <tr>
+            <td><strong>Overlap</strong></td>
+            <td>Nodes that pass the RWR threshold in both increased and decreased directions before unique-direction filtering.</td>
+          </tr>
+          <tr>
+            <td><strong>Supernodes</strong></td>
+            <td>Retained seed-centred ego structures after KDE filtering. These are the main local network units.</td>
+          </tr>
+          <tr>
+            <td><strong>Nodes / Edges</strong></td>
+            <td>Total nodes and connections in the final supernode network for each direction.</td>
+          </tr>
+          <tr>
+            <td><strong>Low degree</strong></td>
+            <td>Seeds that were present in the input network but did not form a retained supernode, usually because their local ego network was too small, too weakly connected, or did not pass the KDE/semantic filtering steps.</td>
+          </tr>
+          <tr>
+            <td><strong>Modules</strong></td>
+            <td>Number of detected clusters after merging related supernodes.</td>
+          </tr>
+          <tr>
+            <td><strong>In modules</strong></td>
+            <td>Supernode-network nodes assigned to modules after clustering; isolated or unassigned nodes are excluded.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The Submitted Seed Coverage table lists the actual gene/protein names for seeds missing from the input network and seeds not retained in the supernode graph. This is the best place to check whether unexpected missing biology is caused by identifier mapping, network coverage, or filtering.
+      </p>
+
+      <h3>Increased and Decreased Tabs</h3>
+      <p>
+        Each direction has its own supernode network, enrichment tables, module network, module-specific tables, and heatmaps. Increased corresponds to positive LFC seeds; decreased corresponds to negative LFC seeds.
+      </p>
+      <p>
+        The two directions should be interpreted independently first. A strong increased module and a strong decreased module may involve different parts of the network, or they may share propagated nodes before the unique-direction step. The overlap statistic helps diagnose how much the two directions compete for the same network region.
+      </p>
+
+      <h3>Supernodes and Modules</h3>
+      <p>
+        Supernodes are collapsed seed-centred ego structures. Modules are groups of related supernodes after merging and clustering. Click a module in the legend to highlight its nodes; Shift-click isolates that module. Use Restore network to return to the full view.
+      </p>
+      <p>
+        In the supernode network, purple nodes represent collapsed supernodes. Expanding a supernode reveals the genes/proteins inside its local neighbourhood. The module network is a stricter module-level view: choosing a module from the selector loads that subnetwork and its matching enrichment tables.
+      </p>
+
+      <h3>Highlighting and Subgraphs</h3>
+      <p>
+        The results page supports two related interactions. A normal click highlights a matching gene set while keeping the full network visible. Shift-click extracts or isolates the selected set so the rest of the graph is hidden. This works from module legends and from enrichment rows. To restore the full network, use the Restore network button above the enrichment table or the reset/restore controls in the network area.
+      </p>
+      <p>
+        Use highlighting when you want context, and use Shift-click isolation when the network is dense and you want to inspect only the genes supporting a module, term, or pathway.
+      </p>
+
+      <h3>Data Tables</h3>
+      <p>
+        The Supernodes Data and Module Data sections contain several tabs. Enrichment shows over-represented annotations for the selected supernode set or module. Drugs, Diseases, and Druggability report external annotations when those files are available. Module tables are specific to the currently selected module, while supernode tables summarize the full direction-level supernode network.
+      </p>
+      <p>
+        In enrichment tables, the ID is the pathway or ontology term, the description is the readable term name, the p-value is the Fisher enrichment score, and the gene column lists the network genes driving the enrichment. The View all control expands long gene lists.
+      </p>
+
+      <h3>Enrichment Tables and Figures</h3>
+      <p>
+        Enrichment databases are reported with short codes:
+        <span class="term-code">C</span> cellular component,
+        <span class="term-code">F</span> molecular function,
+        <span class="term-code">P</span> biological process,
+        <span class="term-code">K</span> KEGG,
+        <span class="term-code">RT</span> Reactome, and
+        <span class="term-code">R</span> pathway/resource annotations.
+        Click an enrichment row to highlight its genes in the network; Shift-click isolates that gene set. Summary figures can be downloaded as image/vector outputs.
+      </p>
+      <p>
+        The Summary figures card visualizes the active enrichment table. Bar and dot plots emphasize the strongest terms, heatmaps show term/gene structure, circle and sankey-style plots help inspect relationships between terms and genes, and module heatmaps connect GO terms to modules when module-level data are available. Use the Top N selector to reduce crowded plots; use the text-size control and download menu when preparing figures.
+      </p>
+      <p>
+        The Enrichment Heatmap / GO-term modules card summarizes how enriched GO terms distribute across modules. It is useful for seeing whether a biological process is concentrated in one module or shared across several modules. The heatmap supports pan/scan behaviour for large labels and can be downloaded.
+      </p>
+
+      <h3>Cross-Experiment View</h3>
+      <p>
+        When a submission contains multiple experiments, the cross-experiment tab compares results across experiments for the same propagation setting. It is designed to answer whether experiments recover similar network structures, whether modules recur across conditions, and whether increased or decreased signals show consistent patterns.
+      </p>
+      <p>
+        The cross-experiment KDE view compares direction-level propagated signatures. The module similarity network connects modules or experiments that share similar module composition. The matrix/heatmap view makes repeated module relationships easier to scan across all experiments. Use this tab after inspecting individual experiments, not before: it is most informative once you know what the main modules mean biologically.
+      </p>
+
+      <h3>Downloads</h3>
+      <p>
+        Network JSON, GraphML, TXT tables, enrichment files, plots, and module-specific files are available from the relevant buttons in each section. Downloaded enrichment files correspond to the same network-specific background used during the analysis.
+      </p>
+    </div>
+
+  </div>
+</section>

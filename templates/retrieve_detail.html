@@ -1,0 +1,138 @@
+[[extend "layout.html"]]
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Retrieved Submission</h1>
+    <p class="subtitle">UUID: <code>[[=uuid]]</code></p>
+
+    <div class="notification [[='is-danger' if error else 'is-info']]">
+      [[=message]]
+    </div>
+
+    <div class="buttons">
+      <a class="button is-link" href="[[=URL('results', uuid)]]">
+        View existing results
+      </a>
+      <a class="button is-light" href="[[=URL('retrieve')]]">
+        Retrieve another UUID
+      </a>
+    </div>
+
+    <div class="box">
+      <h2 class="title is-5">Original Submission</h2>
+      <div class="columns is-multiline">
+        <div class="column is-one-third">
+          <p class="heading">Network</p>
+          <p><strong>[[=network_type]]</strong></p>
+        </div>
+        <div class="column is-one-third">
+          <p class="heading">First propagation damping</p>
+          <p><strong>[[=config.get('damping_seed_propagation', '—')]]</strong></p>
+        </div>
+        <div class="column is-one-third">
+          <p class="heading">Experiments</p>
+          <p><strong>[[=', '.join(experiments)]]</strong></p>
+        </div>
+      </div>
+
+      <details>
+        <summary>Show input.txt</summary>
+        <pre style="max-height:360px; overflow:auto; margin-top:1rem;">[[=input_text]]</pre>
+      </details>
+    </div>
+
+    <div class="box">
+      <h2 class="title is-5">Reanalyse With Updated Parameters</h2>
+      <p class="help mb-4">
+        Input data, network, and first propagation damping are kept fixed. RWR and p-values are reused when available.
+      </p>
+
+      <form method="post">
+        <div class="columns is-multiline">
+
+          <div class="column is-one-third">
+            <label class="label">First Propagation Significance</label>
+            <div class="select is-fullwidth">
+              <select name="first_propagation_significance">
+                [[for opt in options["first_propagation_significance"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["first_propagation_significance"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <label class="label">KDE Probability</label>
+            <div class="select is-fullwidth">
+              <select name="kde_probability">
+                [[for opt in options["kde_probability"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["kde_probability"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <label class="label">Zscore Semantic Similarity</label>
+            <div class="select is-fullwidth">
+              <select name="zscore">
+                [[for opt in options["zscore"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["zscore"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <label class="label">Second Propagation Damping</label>
+            <div class="select is-fullwidth">
+              <select name="second_propagation_damping">
+                [[for opt in options["second_propagation_damping"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["second_propagation_damping"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <label class="label">Minimum Ego Nodes</label>
+            <div class="select is-fullwidth">
+              <select name="minimum_ego_nodes">
+                [[for opt in options["minimum_ego_nodes"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["minimum_ego_nodes"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <label class="label">Third Propagation Damping</label>
+            <div class="select is-fullwidth">
+              <select name="third_propagation_damping">
+                [[for opt in options["third_propagation_damping"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["third_propagation_damping"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+          <div class="column is-one-third">
+            <label class="label">Fisher Significance</label>
+            <div class="select is-fullwidth">
+              <select name="fisher_significance">
+                [[for opt in options["fisher_significance"]:]]
+                  <option value="[[=opt]]" [[='selected' if str(opt) == form_values["fisher_significance"] else '']]>[[=opt]]</option>
+                [[pass]]
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <button class="button is-primary" type="submit">
+          Launch reanalysis
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

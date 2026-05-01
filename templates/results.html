@@ -1,0 +1,3163 @@
+[[extend "layout.html"]]
+
+<style>
+	
+	.network-wrapper {
+     display: flex;
+     gap: 12px;
+   }
+   
+   .net-container {
+     flex: 1;
+     height: 900px;
+   }
+   
+  .ot-panel {
+  display: none;
+  width: 320px;
+  min-width: 280px;
+  max-width: 360px;
+  background: white;
+  border-left: 1px solid #ddd;
+  padding: 10px;
+  overflow-y: auto;
+  border-radius: 8px;
+  position: relative;
+  }
+  
+  .ot-panel.is-open {
+    display: block;
+  }
+  
+  .ot-panel-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
+  
+  .ot-content {
+    font-size: 13px;
+    padding-top: 30px;
+  }
+   
+
+   	.run-label {
+     font-size: 0.7rem;
+     text-transform: uppercase;
+     opacity: 0.6;
+     margin-right: 6px;
+   }
+   
+   .run-uuid {
+     font-family: monospace;
+     font-size: 1rem;
+     background: #f5f5f5;
+     padding: 3px 8px;
+     border-radius: 6px;
+   }
+   
+   .run-meta {
+     font-size: 0.85rem;
+     line-height: 1.4;
+   }
+
+	
+	.run-header {
+    line-height: 1.4;
+  }
+  
+  .run-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+ 
+  
+  .run-subtitle {
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+  
+  .run-meta-small {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin-top: 4px;
+  }
+
+   .info-icon {
+    margin-left: 6px;
+    font-size: 0.75rem;
+    color: #999;
+    cursor: help;
+  }
+  
+  .info-icon:hover {
+    color: #333;
+  }
+  .dashboard-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  /* 4 columns */
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .dashboard-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .dashboard-label {
+    opacity: 0.6;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+  
+  .dashboard-values {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+  }
+  
+  .dashboard-value {
+    font-weight: 600;
+  }
+
+
+.up { color: #2e7d32; }
+.down { color: #c62828; }
+
+   .muted { opacity:.7; }
+  .net-box { border-radius: 14px; margin-bottom: 1.5rem; }
+  .net-container { height: 900px; min-height: 800px; }
+  .meta-heatmap-wrap { min-height: 420px; }
+  .is-hidden { display:none !important; }
+  code { font-size: .9em; }
+  .table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+.plot-container svg {
+  flex-shrink: 0;
+    cursor: grab;
+
+}
+.datatable-container table {
+  width: 100% !important;
+}
+
+.plot-container svg:active {
+  cursor: grabbing;
+}
+
+.dataTables_wrapper {
+  width: 100%;
+}
+
+#display-panel {
+
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+
+  width: 220px;
+
+  z-index: 2000;
+
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+}
+
+#display-panel input[type=range] {
+  width: 100%;
+}
+
+</style>
+
+<section class="hero is-light">
+  <div class="hero-body">
+    <div class="container is-fluid">
+      <div class="columns is-vcentered">
+
+        <!-- LEFT: TITLE + META -->
+        <div class="column">
+
+          <h1 class="title is-3">phuEGO Analysis Report</h1>
+
+          <!-- 🔥 UUID (primary) -->
+          <div id="run-id" class="mb-2">
+            <span class="run-label">Analysis ID</span>
+            <span id="run-uuid" class="run-uuid">Loading…</span>
+            <button id="copy-uuid" class="button is-small is-light ml-2">Copy</button>
+          </div>
+
+          <!-- 🔥 parameters (secondary, no duplication of experiment) -->
+          <div id="run-meta" class="run-meta muted">
+            Loading…
+          </div>
+
+          <!-- 🔥 status (smaller, less dominant) -->
+          <div id="status-box" class="notification is-light is-small mt-2">
+            Checking job status…
+          </div>
+
+        </div>
+
+        <!-- RIGHT: EXPERIMENT SELECTOR -->
+        <div class="column is-narrow">
+          <div class="field">
+            <label class="label is-small">Experiment</label>
+            <div class="control">
+              <div class="select is-medium">
+                <select id="experiment-selector"></select>
+              </div>
+            </div>
+            <p class="help muted">Switch experiment view</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="container is-fluid">
+
+    <div id="dashboard" class="mb-4"></div>
+    <div id="seed-coverage-table" class="mb-4"></div>
+
+    <div class="box mt-4" id="input-box" style="display:none;">
+      <div class="level">
+        <div class="level-left">
+          <h2 class="title is-6 mb-0">Input Parameters</h2>
+        </div>
+        <div class="level-right">
+          <button id="toggle-input" class="button is-small">Show</button>
+        </div>
+      </div>
+      <div id="input-content" style="display:none;">
+        <pre style="max-height:420px; overflow:auto;"></pre>
+      </div>
+    </div>
+
+    <div class="tabs is-toggle is-large is-centered mt-6">
+      <ul>
+        <li class="is-active" id="tab-cross"><a>Cross-experiment</a></li>
+
+        <li id="tab-inc"><a>↑ Increased</a></li>
+        <li id="tab-dec"><a>↓ Decreased</a></li>
+      </ul>
+    </div>
+
+ <div id="panel-cross">
+
+<div class="box net-box">
+
+<div class="level">
+<div class="level-left">
+<h2 class="title is-5 mb-1">Cross-Experiment Similarity</h2>
+</div>
+<div class="level-right" style="gap:.75rem">
+
+<button class="button is-small is-link is-light" id="cross-dir-inc">Increased</button>
+<button class="button is-small is-danger is-light" id="cross-dir-dec">Decreased</button>
+
+<button class="button is-small is-info is-light" id="cross-view-kde">KDE overlap</button>
+<button class="button is-small is-info is-light" id="cross-view-modnet">Module similarity</button>
+<button class="button is-small is-info is-light" id="cross-view-heat">Heatmap</button>
+
+</div>
+</div>
+
+
+<!-- KDE NETWORK -->
+
+<div id="cross-kde-wrap" class="mt-4">
+
+<h3 class="subtitle is-6">KDE overlap network</h3>
+
+<div class="level-right" style="gap:12px">
+
+<label class="is-size-7">Nodes</label>
+<input id="cross-kde-node-slider" type="range" min="0.7" max="1.6" step="0.05" value="1">
+
+<label class="is-size-7">Edges</label>
+<input id="cross-kde-edge-slider" type="range" min="0.5" max="3" step="0.1" value="1">
+
+
+<label class="is-size-7">Labels</label>
+
+<input id="cross-kde-label-slider" type="range" min="0.7" max="2" step="0.1" value="1">
+<label class="is-size-7">Weight</label>
+<input id="cross-kde-weight-slider" type="range" min="0" max="1" step="0.01" value="0">
+       
+<button id="cross-kde-reset" class="button is-small is-light">Reset</button>
+
+</div>
+
+<div id="cross-kde-network" class="network-wrapper">
+  <div class="net-container"></div>
+</div>
+</div>
+
+
+<!-- MODULE NETWORK -->
+
+<div id="cross-modnet-wrap" class="mt-4 is-hidden">
+
+<h3 class="subtitle is-6">Module similarity network</h3>
+
+<div class="level-right" style="gap:12px">
+
+<label class="is-size-7">Nodes</label>
+<input id="cross-module-node-slider" type="range" min="0.7" max="1.6" step="0.05" value="1">
+
+<label class="is-size-7">Edges</label>
+<input id="cross-module-edge-slider" type="range" min="0.1" max="8" step="0.1" value="1">
+
+<label class="is-size-7">Labels</label>
+<input id="cross-module-label-slider" type="range" min="0.7" max="2" step="0.1" value="1">
+<label class="is-size-7">Weight</label>
+<input id="cross-module-weight-slider" type="range" min="0" max="1" step="0.01" value="0">
+
+<button id="cross-module-reset" class="button is-small is-light">Reset</button>
+
+</div>
+
+<div id="cross-module-network" class="network-wrapper">
+  <div class="net-container"></div>
+</div>
+</div>
+
+
+<!-- HEATMAP -->
+
+<div id="cross-heat-wrap" class="mt-4 is-hidden">
+
+<h3 class="subtitle is-6">Module similarity heatmap</h3>
+
+<div class="level-right mb-2" style="gap:12px">
+
+<label class="is-size-7">Text</label>
+
+<input id="cross-heat-text-slider"
+       type="range"
+       min="8"
+       max="28"
+       step="1"
+       value="12">
+
+</div>
+
+<div id="cross-heatmap" class="plot-container"></div>
+
+</div>
+
+</div>
+</div>
+    <!-- INCREASED -->
+<div id="panel-inc" class="is-hidden">
+
+  <!-- SUPER NODES NETWORK -->
+  <div class="box net-box">
+
+    <div class="level">
+
+      <div class="level-left">
+        <h3 class="title is-6">Supernodes Network</h3>
+      </div>
+
+      <div class="level-right" style="gap:12px">
+
+        <label class="is-size-7">Nodes</label>
+        <input id="inc-supernodes-node-slider" type="range" min="0.7" max="1.6" step="0.05" value="1">
+
+        <label class="is-size-7">Edges</label>
+        <input id="inc-supernodes-edge-slider" type="range" min="0.3" max="3" step="0.1" value="1">
+
+        <label class="is-size-7">Labels</label>
+        <input id="inc-supernodes-label-slider" type="range" min="0.7" max="2" step="0.1" value="1">
+<label class="is-size-7">Weight</label>
+<input id="inc-supernodes-weight-slider" type="range" min="0" max="1" step="0.01" value="0">
+
+        <button id="inc-supernodes-reset" class="button is-small is-light">
+          Reset
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="buttons mb-3">
+
+      <button id="inc-supernodes-expand" class="button is-small is-link is-light">
+        Expand all
+      </button>
+
+      <button id="inc-supernodes-collapse" class="button is-small is-link is-light">
+        Collapse all
+      </button>
+
+      <div class="select is-small">
+        <select id="inc-supernodes-format">
+          <option value="json">Sigma JSON</option>
+          <option value="graphml">GraphML</option>
+        </select>
+      </div>
+
+      <button id="inc-supernodes-download" class="button is-small is-info">
+        Download
+      </button>
+
+    </div>
+
+<div id="inc-supernodes" class="network-wrapper">
+
+  <div class="net-container"></div>
+
+  <div class="ot-panel">
+    <button type="button" class="button is-small is-light ot-panel-close">Close</button>
+    <div class="ot-content">Click a node</div>
+  </div>
+
+</div>
+
+<div class="is-size-7 has-text-grey mb-1">
+Legend: click a module to highlight nodes. <b>SHIFT + click</b> to isolate the module.
+</div>
+
+<div id="inc-supernodes-legend" class="network-legend"></div>
+  <button id="inc-clear-highlight" class="button is-small is-light">
+    Clear Highlight
+  </button>
+  </div>
+
+
+  <!-- SUPERNODE ENRICHMENT TABLE -->
+  <div class="box">
+
+   <h3 class="title is-6">Supernodes Data</h3>
+   
+   <div class="tabs is-small mb-2">
+     <ul id="inc-supernodes-tabs">
+       <li class="is-active" data-tab="enrichment"><a>Enrichment</a></li>
+       <li data-tab="drugs"><a>Drugs</a></li>
+       <li data-tab="diseases"><a>Diseases</a></li>
+       <li data-tab="druggability"><a>Druggability</a></li>
+     </ul>
+   </div>
+   
+   <div id="inc-supernodes-db-buttons" class="buttons mb-3"></div>
+   <div id="inc-supernodes-content" class="datatable-container"></div>
+
+  </div>
+
+
+  <!-- MODULE NETWORK -->
+  <div class="box net-box">
+
+    <div class="level">
+
+      <div class="level-left">
+        <h3 class="title is-6">Module Network</h3>
+      </div>
+
+      <div class="level-right" style="gap:12px">
+
+        <label class="is-size-7">Nodes</label>
+        <input id="inc-module-node-slider" type="range" min="0" max="1" step="0.01" value="0">
+
+        <label class="is-size-7">Edges</label>
+        <input id="inc-module-edge-slider"           type="range"
+       min="0.4"
+       max="3"
+       step="0.1"
+       value="1">
+
+
+        <label class="is-size-7">Labels</label>
+        <input id="inc-module-label-slider" type="range" min="0.7" max="2" step="0.1" value="1">
+<label class="is-size-7">Weight</label>
+<input id="inc-module-weight-slider" type="range" min="0" max="1" step="0.01" value="0">
+
+        <button id="inc-module-reset" class="button is-small is-light">
+          Reset
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="field is-grouped mb-3">
+
+      <div class="control">
+        <div class="select is-small">
+          <select id="inc-module-selector"></select>
+        </div>
+      </div>
+
+      <div class="control">
+        <div class="select is-small">
+          <select id="inc-module-format">
+            <option value="json">Sigma JSON</option>
+            <option value="graphml">GraphML</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control">
+        <button id="inc-module-download"
+                class="button is-small is-info">
+          Download
+        </button>
+      </div>
+
+    </div>
+
+<div id="inc-module-network" class="network-wrapper">
+  <div class="net-container"></div>
+<div class="ot-panel">
+  <button type="button" class="button is-small is-light ot-panel-close">Close</button>
+  <div class="ot-content">Click a node</div>
+</div>
+
+  </div>
+
+</div>
+  <!-- MODULE ENRICHMENT TABLE -->
+<div class="box">
+
+  <h3 class="title is-6">Module Data</h3>
+
+
+    <div class="tabs is-small mb-2">
+      <ul id="inc-module-tabs">
+        <li class="is-active" data-tab="enrichment"><a>Enrichment</a></li>
+        <li data-tab="drugs"><a>Drugs</a></li>
+        <li data-tab="diseases"><a>Diseases</a></li>
+        <li data-tab="druggability"><a>Druggability</a></li>
+      </ul>
+    </div>
+
+    <div id="inc-module-db-buttons" class="buttons mb-3"></div>
+    <div id="inc-module-content" class="datatable-container"></div>
+
+</div>
+
+
+  <!-- MODULE META NETWORK -->
+  <div class="box net-box">
+
+    <h3 class="title is-6">Module Meta Network</h3>
+
+<div id="inc-module-meta" class="network-wrapper">
+  <div class="net-container"></div>
+</div>
+  </div>
+
+
+  <!-- HEATMAP FIGURE -->
+<div class="box">
+
+<h3 class="title is-6">Enrichment Heatmap / GO-term modules</h3>
+
+<div class="level-right mb-2" style="gap:12px">
+
+<label class="is-size-7">Text</label>
+
+<input id="inc-heat-text-slider"
+       type="range"
+       min="8"
+       max="28"
+       step="1"
+       value="12">
+
+</div>
+
+<div id="inc-meta-heatmap"
+     class="meta-heatmap-wrap plot-container">
+</div>
+
+</div>
+
+</div>
+
+ <!-- DECREASED -->
+<div id="panel-dec" class="is-hidden">
+
+  <!-- SUPER NODES NETWORK -->
+  <div class="box net-box">
+
+    <div class="level">
+
+      <div class="level-left">
+        <h3 class="title is-6">Supernodes Network</h3>
+      </div>
+
+      <div class="level-right" style="gap:12px">
+
+        <label class="is-size-7">Nodes</label>
+        <input id="dec-supernodes-node-slider" type="range" min="0.7" max="1.6" step="0.05" value="1">
+
+        <label class="is-size-7">Edges</label>
+        <input id="dec-supernodes-edge-slider" type="range" min="0.3" max="3" step="0.1" value="1">
+
+        <label class="is-size-7">Labels</label>
+        <input id="dec-supernodes-label-slider" type="range" min="0.7" max="2" step="0.1" value="1">
+<label class="is-size-7">Weight</label>
+<input id="dec-supernodes-weight-slider" type="range" min="0" max="1" step="0.01" value="0">
+
+        <button id="dec-supernodes-reset" class="button is-small is-light">
+          Reset
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="buttons mb-3">
+
+      <button id="dec-supernodes-expand"
+              class="button is-small is-link is-light">
+        Expand all
+      </button>
+
+      <button id="dec-supernodes-collapse"
+              class="button is-small is-link is-light">
+        Collapse all
+      </button>
+
+      <div class="select is-small">
+        <select id="dec-supernodes-format">
+          <option value="json">Sigma JSON</option>
+          <option value="graphml">GraphML</option>
+        </select>
+      </div>
+
+      <button id="dec-supernodes-download"
+              class="button is-small is-info">
+        Download
+      </button>
+
+    </div>
+<div id="dec-supernodes" class="network-wrapper">
+  <div class="net-container"></div>
+<div class="ot-panel">
+  <button type="button" class="button is-small is-light ot-panel-close">Close</button>
+  <div class="ot-content">Click a node</div>
+</div>
+</div>
+    <div class="is-size-7 has-text-grey mb-1">
+    Legend: click a module to highlight nodes. <b>SHIFT + click</b> to isolate the module.
+    </div>
+    
+    <div id="dec-supernodes-legend" class="network-legend"></div>
+      <button id="dec-clear-highlight" class="button is-small is-light">
+        Clear Highlight
+      </button>
+      </div>
+
+
+  <!-- SUPERNODE ENRICHMENT TABLE -->
+<div class="box">
+  <h3 class="title is-6">Supernodes Data</h3>
+
+  <div class="tabs is-small mb-2">
+    <ul id="dec-supernodes-tabs">
+      <li class="is-active" data-tab="enrichment"><a>Enrichment</a></li>
+      <li data-tab="drugs"><a>Drugs</a></li>
+      <li data-tab="diseases"><a>Diseases</a></li>
+      <li data-tab="druggability"><a>Druggability</a></li>
+    </ul>
+  </div>
+
+  <div id="dec-supernodes-db-buttons" class="buttons mb-3"></div>
+  <div id="dec-supernodes-content" class="datatable-container"></div>
+</div>
+
+
+  <!-- MODULE NETWORK -->
+<div class="box net-box">
+
+  <div class="level">
+
+    <div class="level-left">
+      <h3 class="title is-6">Module Network</h3>
+    </div>
+
+    <div class="level-right" style="gap:12px">
+
+      <label class="is-size-7">Nodes</label>
+      <input id="dec-module-node-slider"
+             type="range"
+             min="0.7"
+             max="1.6"
+             step="0.05"
+             value="1">
+
+      <label class="is-size-7">Edges</label>
+      <input id="dec-module-edge-slider"
+          type="range"
+       min="0.4"
+       max="3"
+       step="0.1"
+       value="1">
+
+      <label class="is-size-7">Labels</label>
+      <input id="dec-module-label-slider"
+             type="range"
+             min="0.7"
+             max="2"
+             step="0.1"
+             value="1">
+<label class="is-size-7">Weight</label>
+<input id="dec-module-weight-slider" type="range" min="0" max="1" step="0.01" value="0">
+
+      <button id="dec-module-reset"
+              class="button is-small is-light">
+        Reset
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="buttons mb-3">
+
+    <div class="select is-small">
+      <select id="dec-module-selector"></select>
+    </div>
+
+    <div class="select is-small">
+      <select id="dec-module-format">
+        <option value="json">Sigma JSON</option>
+        <option value="graphml">GraphML</option>
+      </select>
+    </div>
+
+    <button id="dec-module-download"
+            class="button is-small is-info">
+      Download
+    </button>
+
+  </div>
+
+<div id="dec-module-network" class="network-wrapper">
+  <div class="net-container"></div>
+<div class="ot-panel">
+  <button type="button" class="button is-small is-light ot-panel-close">Close</button>
+  <div class="ot-content">Click a node</div>
+</div>
+</div>
+
+
+</div>
+
+
+  <!-- MODULE ENRICHMENT TABLE -->
+<div class="box">
+
+  <h3 class="title is-6">Module Data</h3>
+
+
+    <div class="tabs is-small mb-2">
+      <ul id="dec-module-tabs">
+        <li class="is-active" data-tab="enrichment"><a>Enrichment</a></li>
+        <li data-tab="drugs"><a>Drugs</a></li>
+        <li data-tab="diseases"><a>Diseases</a></li>
+        <li data-tab="druggability"><a>Druggability</a></li>
+      </ul>
+    </div>
+
+    <div id="dec-module-db-buttons" class="buttons mb-3"></div>
+    <div id="dec-module-content" class="datatable-container"></div>
+
+</div>
+
+
+
+  <!-- MODULE META NETWORK -->
+  <div class="box net-box">
+
+    <h3 class="title is-6">Module Meta Network</h3>
+
+    <div id="dec-module-meta" class="network-wrapper">
+  <div class="net-container"></div>
+   </div>
+
+  </div>
+
+
+  <!-- HEATMAP -->
+<div class="box">
+
+<h3 class="title is-6">Enrichment Heatmap / GO-term modules</h3>
+
+<div class="level-right mb-2" style="gap:12px">
+
+<label class="is-size-7">Text</label>
+
+<input id="dec-heat-text-slider"
+       type="range"
+       min="8"
+       max="28"
+       step="1"
+       value="12">
+
+</div>
+
+<div id="dec-meta-heatmap"
+     class="meta-heatmap-wrap plot-container">
+</div>
+
+</div>
+
+</div>
+</section>
+
+<div id="ot-tooltip"
+     style="display:none; position:fixed; z-index:3000; background:white; border:1px solid #ddd; padding:6px 8px; border-radius:6px; box-shadow:0 4px 12px rgba(0,0,0,0.12); pointer-events:none; font-size:12px;">
+</div>
+
+<!-- libs -->
+<!-- CSS -->
+<link rel="stylesheet" href="[[=URL('static/css/jquery.dataTables.min.css')]]">
+
+<!-- JS VENDOR -->
+<script src="[[=URL('static/js/vendor/jquery.min.js')]]"></script>
+
+<script src="[[=URL('static/js/vendor/jquery.dataTables.min.js')]]"></script>
+<script src="[[=URL('static/js/vendor/dataTables.buttons.min.js')]]"></script>
+<script src="[[=URL('static/js/vendor/buttons.html5.min.js')]]"></script>
+<script src="[[=URL('static/js/vendor/buttons.print.min.js')]]"></script>
+
+<script src="[[=URL('static/js/vendor/jspdf.umd.min.js')]]"></script>
+
+<script src="[[=URL('static/js/vendor/d3.v7.min.js')]]"></script>
+<script src="[[=URL('static/js/vendor/d3-sankey.min.js')]]"></script>
+
+<!-- bundled network renderer -->
+<script type="module" src="[[=URL('static/js/dist/assets/main.js')]]"></script>
+<script type="module">
+import * as Tables from '[[=URL("static/js/tables.js")]]';
+import * as Enrichment from '[[=URL("static/js/enrichment.js")]]';
+import * as Utils from '[[=URL("static/js/utils_plot.js")]]';
+
+const APP_BASE = '[[=URL("index")]]'.replace(/\/index$/, "");
+const UUID = "[[=uuid]]";
+
+const EXPERIMENTS = [[=XML(json.dumps(experiments))]];
+const HAS_CROSS = EXPERIMENTS.length > 1;
+
+window.DISPLAY = {
+  fontSize: 12,
+}
+
+// expose globals for tables.js
+window.APP_BASE = APP_BASE;
+window.UUID = UUID;
+window.currentExperiment = () => currentExperiment;
+window.getPropagation = getPropagation;
+window.getResults = () => window.__CURRENT_RESULTS__;
+
+const STATUS_URL = "[[=URL('status_json', uuid)]]";
+const RESULTS_JSON = (exp) => "[[=URL('results_json', uuid, '___EXP___')]]".replace("___EXP___", encodeURIComponent(exp));
+const CROSS_JSON   = (prop) => "[[=URL('cross_json', uuid, '___PROP___')]]".replace("___PROP___", encodeURIComponent(prop));
+
+const sel = document.getElementById("experiment-selector");
+const runMeta = document.getElementById("run-meta");
+const statusBox = document.getElementById("status-box");
+
+const inputBox = document.getElementById("input-box");
+const inputContent = document.getElementById("input-content");
+const inputPre = inputContent.querySelector("pre");
+const toggleBtn = document.getElementById("toggle-input");
+
+const incModuleSel = document.getElementById("inc-module-selector");
+const decModuleSel = document.getElementById("dec-module-selector");
+
+const tabCross = document.getElementById("tab-cross");
+const tabInc   = document.getElementById("tab-inc");
+const tabDec   = document.getElementById("tab-dec");
+
+const panelCross = document.getElementById("panel-cross");
+const panelInc   = document.getElementById("panel-inc");
+const panelDec   = document.getElementById("panel-dec");
+
+const crossDirInc  = document.getElementById("cross-dir-inc");
+const crossDirDec  = document.getElementById("cross-dir-dec");
+const crossViewKde = document.getElementById("cross-view-kde");
+const crossViewMod = document.getElementById("cross-view-modnet");
+const crossViewHeat= document.getElementById("cross-view-heat");
+
+
+const crossKdeWrap  = document.getElementById("cross-kde-wrap");
+const crossModWrap  = document.getElementById("cross-modnet-wrap");
+const crossHeatWrap = document.getElementById("cross-heat-wrap");
+
+let currentExperiment = null;
+let currentResults = null;
+let currentCross = null;
+
+let currentEnrichment = { increased: null, decreased: null };
+let currentHeatmap = { increased: null, decreased: null };      // module meta heatmap
+let currentGeneTerm = { increased: null, decreased: null };     // summary heatmap button
+
+
+let activeTab = HAS_CROSS ? "cross" : "inc";
+let crossDir = "increased";
+let crossView = "kde";
+let renderGeneration = 0;
+
+const jsonCache = new Map();
+const geneNameCache = new Map();
+const subgraphMode = {};
+let cancelRunRequested = false;
+
+function alreadyReloadedAfterCompletion() {
+  return sessionStorage.getItem(`phuego_completed_reload_${UUID}`) === "1";
+}
+
+function markReloadedAfterCompletion() {
+  sessionStorage.setItem(`phuego_completed_reload_${UUID}`, "1");
+}
+
+function clearReloadedAfterCompletion() {
+  sessionStorage.removeItem(`phuego_completed_reload_${UUID}`);
+}
+
+function getModuleFile(direction, type, moduleId) {
+
+  const results = window.getResults();
+  const paths = results?.directions?.[direction]?.paths;
+  if (!paths) return null;
+
+  const pattern = paths.modules?.[`${type}_pattern`];
+  if (!pattern) return null;
+
+  const relative = pattern.replace("{id}", moduleId);
+
+  // 🔥 THIS IS THE FIX
+  const prop = getPropagation();
+
+  return `${APP_BASE}/results_file/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${relative}`;
+}
+
+async function loadModuleDrugs(direction, moduleId) {
+  const url = getModuleFile(direction, "drugs", moduleId);
+  return await fetchJSON(url);
+}
+
+async function loadModuleDiseases(direction, moduleId) {
+  const url = getModuleFile(direction, "diseases", moduleId);
+  return await fetchJSON(url);
+}
+
+function resultsFileUrl(relativePath) {
+  const prop = getPropagation();
+  return `${APP_BASE}/results_file/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${relativePath}`;
+}
+
+function downloadFileUrl(relativePath) {
+  const prop = getPropagation();
+
+  if (!relativePath || !UUID || !currentExperiment || !prop) {
+    console.warn("downloadFileUrl missing pieces:", {
+      relativePath,
+      UUID,
+      currentExperiment,
+      prop
+    });
+    return null;
+  }
+
+  return `${APP_BASE}/download/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${relativePath}`;
+}
+
+function getDirectionPaths(direction) {
+  const results = window.getResults?.();
+  return results?.directions?.[direction]?.paths || null;
+}
+
+function getSupernodesDataUrl(direction, kind) {
+  const paths = getDirectionPaths(direction);
+  const rel = paths?.supernodes?.[kind];
+  return rel ? resultsFileUrl(rel) : null;
+}
+
+function getModuleDataUrl(direction, moduleId, kind) {
+  const paths = getDirectionPaths(direction);
+  const pattern =
+    kind === "drugs" ? paths?.modules?.drugs_pattern :
+    kind === "diseases" ? paths?.modules?.diseases_pattern :
+    kind === "druggability" ? paths?.modules?.gene_druggability_pattern :
+    kind === "json" ? paths?.modules?.sigma_pattern :
+    kind === "graphml" ? paths?.modules?.graphml_pattern :
+    kind === "drugs_txt" ? paths?.modules?.drugs_txt_pattern :
+    kind === "diseases_txt" ? paths?.modules?.diseases_txt_pattern :
+    kind === "druggability_txt" ? paths?.modules?.gene_druggability_txt_pattern :
+    null;
+
+  if (!pattern) return null;
+  return resultsFileUrl(pattern.replace("{id}", moduleId));
+}
+
+function getSupernodesTxtDownloadUrl(direction, kind) {
+  const paths = getDirectionPaths(direction);
+  if (!paths?.supernodes) return null;
+
+  const rel =
+    kind === "drugs" ? paths.supernodes.drugs_txt :
+    kind === "diseases" ? paths.supernodes.diseases_txt :
+    kind === "druggability" ? paths.supernodes.gene_druggability_txt :
+    null;
+
+  if (!rel) {
+    console.warn("Missing supernodes TXT path in manifest:", { direction, kind, paths });
+    return null;
+  }
+
+  return downloadFileUrl(rel);
+}
+
+function getModuleTxtDownloadUrl(direction, moduleId, kind) {
+  const paths = getDirectionPaths(direction);
+  if (!paths?.modules) return null;
+
+  const pattern =
+    kind === "drugs" ? paths.modules.drugs_txt_pattern :
+    kind === "diseases" ? paths.modules.diseases_txt_pattern :
+    kind === "druggability" ? paths.modules.gene_druggability_txt_pattern :
+    null;
+
+  if (!pattern) {
+    console.warn("Missing module TXT pattern in manifest:", { direction, kind, paths });
+    return null;
+  }
+
+  return downloadFileUrl(pattern.replace("{id}", moduleId));
+}
+
+async function loadSupernodesDruggability(direction) {
+  try {
+    return await fetchJSON(getSupernodesDataUrl(direction, "gene_druggability"));
+  } catch {
+    return [];
+  }
+}
+
+async function loadModuleDruggability(direction, moduleId) {
+  const url = getModuleDataUrl(direction, moduleId, "druggability");
+  return url ? await fetchJSON(url) : [];
+}
+
+
+function renderSimpleDownloadButtons(container, buttons) {
+  if (!container) return;
+  container.innerHTML = "";
+
+  const validButtons = (buttons || []).filter(b => b && b.href);
+  if (!validButtons.length) return;
+
+  const wrap = document.createElement("div");
+  wrap.className = "buttons mb-2";
+
+  validButtons.forEach(({ label, href, filename }) => {
+    const a = document.createElement("a");
+    a.className = "button is-small is-light";
+    a.href = href;
+    a.download = filename;
+    a.textContent = label;
+    wrap.appendChild(a);
+  });
+
+  container.appendChild(wrap);
+}
+
+async function showSupernodesTab(direction, tabName) {
+  const prefix = direction === "increased" ? "inc" : "dec";
+  const buttonsEl = document.getElementById(`${prefix}-supernodes-db-buttons`);
+  const contentEl = document.getElementById(`${prefix}-supernodes-content`);
+
+  if (!buttonsEl || !contentEl) return;
+
+  if (tabName === "drugs") {
+    renderSimpleDownloadButtons(buttonsEl, [{
+      label: "Download drugs TXT",
+      href: getSupernodesTxtDownloadUrl(direction, "drugs"),
+      filename: `${direction}_supernodes_drugs.txt`
+    }]);
+
+    const url = getSupernodesDataUrl(direction, "drugs");
+    const data = url ? await fetch(url).then(r => r.json()) : [];
+    renderDrugTable(data || [], contentEl);
+    return;
+  }
+
+  if (tabName === "diseases") {
+    renderSimpleDownloadButtons(buttonsEl, [{
+      label: "Download diseases TXT",
+      href: getSupernodesTxtDownloadUrl(direction, "diseases"),
+      filename: `${direction}_supernodes_diseases.txt`
+    }]);
+
+    const url = getSupernodesDataUrl(direction, "diseases");
+    const data = url ? await fetch(url).then(r => r.json()) : [];
+    renderDiseaseTable(data || [], contentEl);
+    return;
+  }
+  
+  
+  if (tabName === "druggability") {
+    renderSimpleDownloadButtons(buttonsEl, [{
+      label: "Download druggability TXT",
+      href: getSupernodesTxtDownloadUrl(direction, "druggability"),
+      filename: `${direction}_supernodes_gene_druggability.txt`
+    }]);
+  
+    const data = await loadSupernodesDruggability(direction);
+    renderDruggabilityTable(data || [], contentEl);
+    return;
+  }
+
+  // enrichment
+  buttonsEl.innerHTML = "";
+  renderSupernodesEnrichment(direction);
+}
+
+async function showModuleTab(direction, moduleId, tabName) {
+  const prefix = direction === "increased" ? "inc" : "dec";
+  const buttonsEl = document.getElementById(`${prefix}-module-db-buttons`);
+  const contentEl = document.getElementById(`${prefix}-module-content`);
+
+  if (!buttonsEl || !contentEl) return;
+
+  if (tabName === "drugs") {
+    renderSimpleDownloadButtons(buttonsEl, [{
+      label: "Download drugs TXT",
+      href: getModuleTxtDownloadUrl(direction, moduleId, "drugs"),
+      filename: `module_${moduleId}_drugs.txt`
+    }]);
+
+    const url = getModuleDataUrl(direction, moduleId, "drugs");
+    const data = url ? await fetch(url).then(r => r.json()) : [];
+    renderDrugTable(data || [], contentEl);
+    return;
+  }
+
+  if (tabName === "diseases") {
+    renderSimpleDownloadButtons(buttonsEl, [{
+      label: "Download diseases TXT",
+      href: getModuleTxtDownloadUrl(direction, moduleId, "diseases"),
+      filename: `module_${moduleId}_diseases.txt`
+    }]);
+
+    const url = getModuleDataUrl(direction, moduleId, "diseases");
+    const data = url ? await fetch(url).then(r => r.json()) : [];
+    renderDiseaseTable(data || [], contentEl);
+    return;
+  }
+  
+  if (tabName === "druggability") {
+  renderSimpleDownloadButtons(buttonsEl, [{
+    label: "Download druggability TXT",
+    href: getModuleTxtDownloadUrl(direction, moduleId, "druggability"),
+    filename: `module_${moduleId}_gene_druggability.txt`
+  }]);
+
+  const data = await loadModuleDruggability(direction, moduleId);
+  renderDruggabilityTable(data || [], contentEl);
+  return;
+  }
+
+  buttonsEl.innerHTML = "";
+  renderModuleEnrichment(direction, moduleId);
+}
+
+
+function renderDrugTable(data, container) {
+
+  if (!data?.length) {
+    container.innerHTML = "<p class='has-text-grey'>No drugs</p>";
+    return;
+  }
+
+  const rows = data.map(d => ({
+    gene_id: d.gene_id ?? "",
+    gene_name: d.gene_name ?? "",
+    drug_name: d.drug_name ?? "",
+    chembl_id: d.chembl_id ?? "",
+    phase: d.phase ?? "",
+    drug_diseases: d.drug_diseases ?? ""
+  }));
+
+  Tables.renderGenericTableWithDataTables(
+    container,
+    [
+      { key: "gene_id", title: "UniProt ID" },
+      { key: "gene_name", title: "Gene" },
+      { key: "drug_name", title: "Drug" },
+      { key: "chembl_id", title: "ChEMBL" },
+      { key: "phase", title: "Phase" },
+      { key: "drug_diseases", title: "Drug Indication" }
+    ],
+    rows
+  );
+}
+
+
+function renderDiseaseTable(data, container) {
+
+  if (!data?.length) {
+    container.innerHTML = "<p class='has-text-grey'>No diseases</p>";
+    return;
+  }
+
+  const rows = data.map(d => {
+
+    const pairs = (d.diseases || []).map((dis, i) => {
+      const score = d.scores?.[i];
+      return `${dis} (${score != null ? Number(score).toFixed(2) : "-"})`;
+    });
+
+    return {
+      gene_id: d.gene_id ?? "",
+      gene_name: d.gene_name ?? "",
+      diseases_scores: pairs.join(", ")
+    };
+  });
+
+  Tables.renderGenericTableWithDataTables(
+    container,
+    [
+      { key: "gene_id", title: "UniProt ID" },
+      { key: "gene_name", title: "Gene" },
+      { key: "diseases_scores", title: "Diseases (score)" }
+    ],
+    rows
+  );
+}
+
+function renderDruggabilityTable(data, container) {
+  if (!data?.length) {
+    container.innerHTML = "<p class='has-text-grey'>No druggability data</p>";
+    return;
+  }
+
+  const rows = data.map(d => ({
+    gene_id: d.gene_id ?? "",
+    gene_name: d.gene_name ?? "",
+    druggability_score: d.druggability_score ?? "",
+    modalities: d.modalities ?? "",
+    max_phase: d.max_phase ?? ""
+  }));
+
+  // -----------------------------
+  // legend
+  // -----------------------------
+  container.innerHTML = `
+    <div class="notification is-light mb-3" style="font-size: 0.9rem;">
+      <strong>Modalities legend:</strong>
+      <span class="tag is-light ml-2"><b>SM</b> = small molecule</span>
+      <span class="tag is-light ml-2"><b>AB</b> = antibodies</span>
+      <span class="tag is-light ml-2"><b>PR</b> = PROTAC</span>
+      <span class="tag is-light ml-2"><b>OC</b> = other clinical modality</span>
+    </div>
+    <div class="druggability-table-wrap"></div>
+  `;
+
+  const tableMount = container.querySelector(".druggability-table-wrap");
+
+  Tables.renderGenericTableWithDataTables(
+    tableMount,
+    [
+      { key: "gene_id", title: "UniProt ID" },
+      { key: "gene_name", title: "Gene" },
+      { key: "druggability_score", title: "Druggability Score" },
+      { key: "modalities", title: "Modalities" },
+      { key: "max_phase", title: "Max Phase" }
+    ],
+    rows
+  );
+}
+
+
+function getSupernodesFile(direction, type) {
+
+  const results = window.getResults();
+  const paths = results?.directions?.[direction]?.paths?.supernodes;
+
+  if (!paths) return null;
+
+  const relative = paths[type];  // drugs / diseases
+
+  const prop = getPropagation();
+
+  return `${APP_BASE}/results_file/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${relative}`;
+}
+
+async function loadSupernodesDrugs(direction) {
+  try {
+    return await fetchJSON(getSupernodesFile(direction, "drugs"));
+  } catch {
+    return [];
+  }
+}
+
+async function loadSupernodesDiseases(direction) {
+  try {
+    return await fetchJSON(getSupernodesFile(direction, "diseases"));
+  } catch {
+    return [];
+  }
+}
+
+function setupModuleTabs(direction, moduleId) {
+  const prefix = direction === "increased" ? "inc" : "dec";
+
+  const tabs = document.getElementById(`${prefix}-module-tabs`);
+  const contentEl = document.getElementById(`${prefix}-module-content`);
+  const buttonsEl = document.getElementById(`${prefix}-module-db-buttons`);
+
+  if (!tabs || !contentEl || !buttonsEl) return;
+
+  const activateTab = async (tabName) => {
+    tabs.querySelectorAll("li").forEach(li => {
+      li.classList.toggle("is-active", li.dataset.tab === tabName);
+    });
+
+    if (tabName === "enrichment") {
+      buttonsEl.innerHTML = "";
+      buttonsEl.style.display = "";
+      renderModuleEnrichment(direction, moduleId);
+      return;
+    }
+
+    if (tabName === "drugs") {
+      renderSimpleDownloadButtons(buttonsEl, [{
+        label: "Download drugs",
+        href: getModuleTxtDownloadUrl(direction, moduleId, "drugs"),
+        filename: `module_${moduleId}_drugs.txt`
+      }]);
+
+      const data = await loadModuleDrugs(direction, moduleId);
+      renderDrugTable(data || [], contentEl);
+      return;
+    }
+
+    if (tabName === "diseases") {
+      renderSimpleDownloadButtons(buttonsEl, [{
+        label: "Download diseases",
+        href: getModuleTxtDownloadUrl(direction, moduleId, "diseases"),
+        filename: `module_${moduleId}_diseases.txt`
+      }]);
+
+      const data = await loadModuleDiseases(direction, moduleId);
+      renderDiseaseTable(data || [], contentEl);
+      return;
+    }
+    if (tabName === "druggability") {
+      renderSimpleDownloadButtons(buttonsEl, [{
+        label: "Download druggability",
+        href: getModuleTxtDownloadUrl(direction, moduleId, "druggability"),
+        filename: `module_${moduleId}_gene_druggability.txt`
+      }]);
+    
+      const data = await loadModuleDruggability(direction, moduleId);
+      renderDruggabilityTable(data || [], contentEl);
+      return;
+    }
+  };
+
+  tabs.querySelectorAll("li").forEach(li => {
+    li.onclick = () => activateTab(li.dataset.tab);
+  });
+
+  const activeLi = tabs.querySelector("li.is-active");
+  activateTab(activeLi?.dataset.tab || "enrichment");
+}
+
+function card(label, value, color="is-light", small=false) {
+  return `
+    <div class="column ${small ? "is-2" : "is-3"}">
+      <div class="box metric-card ${small ? "metric-card-small" : ""} ${color}">
+        <div class="metric-label">${label}</div>
+        <div class="metric-value">${value ?? "—"}</div>
+      </div>
+    </div>`;
+}
+
+function getPropagation() {
+  return currentResults?.run_metadata?.propagation || currentResults?.propagation;
+}
+
+function resultsNetworkURL(direction, kind, moduleId = null) {
+  const prop = getPropagation();
+  if (!prop || !currentExperiment) return null;
+
+  let url = `${APP_BASE}/results/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${encodeURIComponent(direction)}/${kind}`;
+  if (moduleId !== null) url += `/${encodeURIComponent(moduleId)}`;
+  return url;
+}
+
+function enrichmentURL(direction) {
+  const prop = getPropagation();
+  if (!prop || !currentExperiment) return null;
+  return `${APP_BASE}/enrichment/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${encodeURIComponent(direction)}`;
+}
+
+function moduleHeatmapURL(direction) {
+  const prop = getPropagation();
+  if (!prop || !currentExperiment) return null;
+  return `${APP_BASE}/module_heatmap/${encodeURIComponent(UUID)}/${encodeURIComponent(currentExperiment)}/${encodeURIComponent(prop)}/${encodeURIComponent(direction)}`;
+}
+
+function infoIcon(text) {
+  return `<span class="info-icon" title="${text}">ⓘ</span>`;
+}
+
+function renderDashboard(d) {
+
+  const container = document.getElementById("dashboard");
+  if (!container) return;
+
+  const net = d.network_summary || {};
+  const dirs = d.directions || {};
+  const adv = d.manifest?.advanced_stats || {};
+
+  const seedsPos = adv.seeds?.pos?.total;
+  const seedsNeg = adv.seeds?.neg?.total;
+  const seedsTot = net.seed_count;
+
+  const nodesInc = dirs?.increased?.node_count;
+  const nodesDec = dirs?.decreased?.node_count;
+
+  const edgesInc = dirs?.increased?.edge_count;
+  const edgesDec = dirs?.decreased?.edge_count;
+
+  const modulesInc = dirs?.increased?.modules_count;
+  const modulesDec = dirs?.decreased?.modules_count;
+
+  const rwrPos = adv.rwr?.pos_count;
+  const rwrNeg = adv.rwr?.neg_count;
+  const overlap = adv.rwr?.overlap_count;
+  
+  const kdeInc = Object.values(adv.kde?.increased || {})[0] || {};
+  const kdeDec = Object.values(adv.kde?.decreased || {})[0] || {};
+  
+  const lowDegInc = kdeInc.low_degree_count;
+  const lowDegDec = kdeDec.low_degree_count;
+  
+  const lowDegIncPct = (nodesInc && lowDegInc != null)
+  ? (100 * lowDegInc / nodesInc).toFixed(1)
+  : null;
+
+  const lowDegDecPct = (nodesDec && lowDegDec != null)
+  ? (100 * lowDegDec / nodesDec).toFixed(1)
+  : null;
+  
+  
+  const superInc = kdeInc.supernodes_count;
+  const superDec = kdeDec.supernodes_count;
+
+  const modInc = adv.modules?.increased?.in_modules;
+  const modDec = adv.modules?.decreased?.in_modules;
+
+  const seedsInGraphPos = adv.seeds?.pos?.in_graph;
+  const seedsInGraphNeg = adv.seeds?.neg?.in_graph;
+  
+  const seedsInGraphPosPct = (seedsPos && seedsInGraphPos != null)
+    ? (100 * seedsInGraphPos / seedsPos).toFixed(1)
+    : null;
+  
+  const seedsInGraphNegPct = (seedsNeg && seedsInGraphNeg != null)
+    ? (100 * seedsInGraphNeg / seedsNeg).toFixed(1)
+    : null;
+  
+
+
+ container.innerHTML = `
+
+  <!-- ROW 1: SIGNAL -->
+  <div class="dashboard-row">
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Seeds ${infoIcon("Input seed proteins used for network propagation")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${seedsPos ?? "—"}</span>
+        <span class="dashboard-value down">↓${seedsNeg ?? "—"}</span>
+        <span class="dashboard-value">(${seedsTot ?? "—"})</span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        In graph ${infoIcon("Seed proteins retained in the final network")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${seedsInGraphPos ?? "—"}</span>
+        <span class="dashboard-value down">↓${seedsInGraphNeg ?? "—"}</span>
+        <span class="muted">
+          (${seedsInGraphPosPct ?? "—"}% · ${seedsInGraphNegPct ?? "—"}%)
+        </span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        RWR ${infoIcon("Nodes passing random walk with restart (RWR) significance threshold")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${rwrPos ?? "—"}</span>
+        <span class="dashboard-value down">↓${rwrNeg ?? "—"}</span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Overlap ${infoIcon("Nodes shared between increased and decreased RWR results")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value">${overlap ?? "—"}</span>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ROW 2: NETWORK -->
+  <div class="dashboard-row">
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Supernodes ${infoIcon("Collapsed representation of seed-centered modules")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${superInc ?? "—"}</span>
+        <span class="dashboard-value down">↓${superDec ?? "—"}</span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Nodes ${infoIcon("Total nodes in the supernode network (seeds + neighbours)")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${nodesInc ?? "—"}</span>
+        <span class="dashboard-value down">↓${nodesDec ?? "—"}</span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Edges ${infoIcon("Connections between nodes in the supernode network")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${edgesInc ?? "—"}</span>
+        <span class="dashboard-value down">↓${edgesDec ?? "—"}</span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Low degree ${infoIcon("Nodes removed due to low connectivity (degree < 2)")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${lowDegInc ?? "—"}</span>
+        <span class="dashboard-value down">↓${lowDegDec ?? "—"}</span>
+        <span class="muted">
+          (${lowDegIncPct ?? "—"}% · ${lowDegDecPct ?? "—"}%)
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ROW 3: MODULES -->
+  <div class="dashboard-row">
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        Modules ${infoIcon("Number of detected network modules")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${modulesInc ?? "—"}</span>
+        <span class="dashboard-value down">↓${modulesDec ?? "—"}</span>
+      </div>
+    </div>
+
+    <div class="dashboard-block">
+      <span class="dashboard-label">
+        In modules ${infoIcon("Nodes assigned to modules after clustering (isolated nodes excluded)")}
+      </span>
+      <div class="dashboard-values">
+        <span class="dashboard-value up">↑${modInc ?? "—"}</span>
+        <span class="dashboard-value down">↓${modDec ?? "—"}</span>
+      </div>
+    </div>
+
+  </div>
+
+`;
+
+}
+
+function missingMapToBadges(value) {
+  const entries = value && typeof value === "object"
+    ? Object.entries(value)
+    : [];
+
+  if (entries.length) {
+    const genes = entries
+      .map(([protein, gene]) => gene && gene !== protein ? `${gene} (${protein})` : protein)
+      .sort();
+    return Utils.makeGeneBadgeList(genes, 8);
+  }
+
+  return "";
+}
+
+async function lookupGeneNames(proteins) {
+  const unique = [...new Set((proteins || []).filter(Boolean))];
+  const missing = unique.filter(protein => !geneNameCache.has(protein));
+
+  if (missing.length) {
+    try {
+      const url = `${APP_BASE}/gene_names_json?ids=${encodeURIComponent(missing.join(","))}`;
+      const data = await fetchJSON(url);
+      const genes = data?.genes || {};
+
+      missing.forEach(protein => {
+        geneNameCache.set(protein, genes[protein] || protein);
+      });
+    } catch (err) {
+      console.warn("Could not load gene names:", err);
+      missing.forEach(protein => geneNameCache.set(protein, protein));
+    }
+  }
+
+  return unique
+    .map(protein => {
+      const gene = geneNameCache.get(protein) || protein;
+      return gene && gene !== protein ? `${gene} (${protein})` : protein;
+    })
+    .sort();
+}
+
+function parseLowDegreeSeeds(seedText, supernodesText) {
+  const seeds = new Set(
+    String(seedText || "")
+      .split(/\r?\n/)
+      .map(s => s.trim())
+      .filter(Boolean)
+  );
+
+  const retained = new Set();
+  String(supernodesText || "")
+    .split(/\r?\n/)
+    .forEach(line => {
+      const parts = line.trim().split(/\t+/).filter(Boolean);
+      if (parts.length > 2) retained.add(parts[0]);
+    });
+
+  return [...seeds].filter(seed => !retained.has(seed)).sort();
+}
+
+async function deriveLowDegreeBadges(direction, manifestValue) {
+  const fromManifest = missingMapToBadges(manifestValue);
+  if (fromManifest) return fromManifest;
+
+  const paths = getDirectionPaths(direction);
+  const supernodesDir = paths?.supernodes_dir;
+  if (!supernodesDir) return "<span class='has-text-grey'>List not available</span>";
+
+  try {
+    const [seedText, supernodesText] = await Promise.all([
+      fetch(resultsFileUrl(`${direction}/seed_nodes.txt`)).then(r => r.ok ? r.text() : ""),
+      fetch(resultsFileUrl(`${supernodesDir}/KDE_supernodes_egos.txt`)).then(r => r.ok ? r.text() : "")
+    ]);
+
+    const genes = await lookupGeneNames(parseLowDegreeSeeds(seedText, supernodesText));
+    return genes.length
+      ? Utils.makeGeneBadgeList(genes, 8)
+      : "<span class='has-text-grey'>None</span>";
+  } catch (err) {
+    console.warn("Could not derive low-degree seed list:", err);
+    return "<span class='has-text-grey'>List not available</span>";
+  }
+}
+
+function bindGeneBadgeToggles(container) {
+  container.querySelectorAll(".btn-toggle-genes").forEach(btn => {
+    btn.onclick = () => {
+      const target = document.getElementById(btn.dataset.target);
+      if (!target) return;
+
+      const hidden = target.style.display === "none" || !target.style.display;
+      target.style.display = hidden ? "" : "none";
+      btn.textContent = hidden ? "Collapse" : `View all (${target.parentElement.querySelectorAll(".tag").length})`;
+    };
+  });
+}
+
+async function renderSeedCoverage(d) {
+  const container = document.getElementById("seed-coverage-table");
+  if (!container) return;
+
+  const adv = d.manifest?.advanced_stats || {};
+  const kdeInc = Object.values(adv.kde?.increased || {})[0] || {};
+  const kdeDec = Object.values(adv.kde?.decreased || {})[0] || {};
+
+  const [lowInc, lowDec] = await Promise.all([
+    deriveLowDegreeBadges("increased", kdeInc.low_degree_missing),
+    deriveLowDegreeBadges("decreased", kdeDec.low_degree_missing)
+  ]);
+
+  const rows = [
+    {
+      direction: "Increased",
+      stage: "Not in input network",
+      genes: missingMapToBadges(adv.seeds?.pos?.missing) || "<span class='has-text-grey'>None</span>"
+    },
+    {
+      direction: "Decreased",
+      stage: "Not in input network",
+      genes: missingMapToBadges(adv.seeds?.neg?.missing) || "<span class='has-text-grey'>None</span>"
+    },
+    {
+      direction: "Increased",
+      stage: "Not retained in supernode graph",
+      genes: lowInc
+    },
+    {
+      direction: "Decreased",
+      stage: "Not retained in supernode graph",
+      genes: lowDec
+    }
+  ];
+
+  container.innerHTML = `
+    <div class="box">
+      <h2 class="title is-6 mb-2">
+        Submitted Seed Coverage ${infoIcon("Submitted proteins/genes missing from the input network, and submitted seeds not retained in the final supernode graph.")}
+      </h2>
+      <div class="table-container">
+        <table class="table is-fullwidth is-striped is-small">
+          <thead>
+            <tr>
+              <th>Direction</th>
+              <th>Stage</th>
+              <th>Genes / proteins</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.direction}</td>
+                <td>${r.stage}</td>
+                <td style="max-width:900px; white-space:normal;">${r.genes}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+  bindGeneBadgeToggles(container);
+}
+
+
+async function fetchJSON(url) {
+  if (!url) return null;
+  if (jsonCache.has(url)) return jsonCache.get(url);
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Fetch failed: ${url}`);
+  const j = await r.json();
+  jsonCache.set(url, j);
+  return j;
+}
+
+function waitForNetworkReady() {
+  return new Promise((resolve) => {
+    const tick = () => {
+      if (window.Network && typeof window.Network.initOneGraph_safe === "function") resolve();
+      else setTimeout(tick, 50);
+    };
+    tick();
+  });
+}
+
+
+function setupSupernodesTabs(direction) {
+  const prefix = direction === "increased" ? "inc" : "dec";
+
+  const tabs = document.getElementById(`${prefix}-supernodes-tabs`);
+  const contentEl = document.getElementById(`${prefix}-supernodes-content`);
+  const buttonsEl = document.getElementById(`${prefix}-supernodes-db-buttons`);
+
+  if (!tabs || !contentEl || !buttonsEl) return;
+
+  const activateTab = async (tabName) => {
+    tabs.querySelectorAll("li").forEach(li => {
+      li.classList.toggle("is-active", li.dataset.tab === tabName);
+    });
+
+    if (tabName === "enrichment") {
+      buttonsEl.innerHTML = "";
+      buttonsEl.style.display = "";
+      renderSupernodesEnrichment(direction);
+      return;
+    }
+
+    if (tabName === "drugs") {
+      renderSimpleDownloadButtons(buttonsEl, [{
+        label: "Download drugs",
+        href: getSupernodesTxtDownloadUrl(direction, "drugs"),
+        filename: `${direction}_supernodes_drugs.txt`
+      }]);
+
+      const data = await loadSupernodesDrugs(direction);
+      renderDrugTable(data || [], contentEl);
+      return;
+    }
+
+    if (tabName === "diseases") {
+      renderSimpleDownloadButtons(buttonsEl, [{
+        label: "Download diseases",
+        href: getSupernodesTxtDownloadUrl(direction, "diseases"),
+        filename: `${direction}_supernodes_diseases.txt`
+      }]);
+
+      const data = await loadSupernodesDiseases(direction);
+      renderDiseaseTable(data || [], contentEl);
+      return;
+    }
+
+    if (tabName === "druggability") {
+      renderSimpleDownloadButtons(buttonsEl, [{
+        label: "Download druggability",
+        href: getSupernodesTxtDownloadUrl(direction, "druggability"),
+        filename: `${direction}_supernodes_gene_druggability.txt`
+      }]);
+    
+      const data = await loadSupernodesDruggability(direction);
+      renderDruggabilityTable(data || [], contentEl);
+      return;
+    }
+
+
+    
+  };
+
+  tabs.querySelectorAll("li").forEach(li => {
+    li.onclick = () => activateTab(li.dataset.tab);
+  });
+
+  const activeLi = tabs.querySelector("li.is-active");
+  activateTab(activeLi?.dataset.tab || "enrichment");
+}
+
+
+function isVisible(el) {
+  if (!el) return false;
+  if (el.classList.contains("is-hidden")) return false;
+  const rect = el.getBoundingClientRect();
+  return rect.width > 10 && rect.height > 10;
+}
+
+
+function safeDispose(containerId) {
+  if (window.Network?.instances?.[containerId]) {
+    try { window.Network.disposeInstance(containerId); } catch {}
+  }
+
+  const wrapper = document.getElementById(containerId);
+  const container = wrapper?.querySelector(".net-container");
+
+  if (container) container.innerHTML = "";  // 🔥 ONLY clear graph
+}
+
+function disposeCrossGraphs() {
+  safeDispose("cross-kde-network");
+  safeDispose("cross-module-network");
+
+  const hm = document.getElementById("cross-heatmap");
+  if (hm) hm.innerHTML = "";
+}
+
+function disposeIncGraphs() {
+  safeDispose("inc-supernodes");
+  safeDispose("inc-module-network");
+  safeDispose("inc-module-meta");
+
+  const el = document.getElementById("inc-meta-heatmap");
+  if (el) el.innerHTML = "";
+}
+
+function disposeDecGraphs() {
+  safeDispose("dec-supernodes");
+  safeDispose("dec-module-network");
+  safeDispose("dec-module-meta");
+
+  const el = document.getElementById("dec-meta-heatmap");
+  if (el) el.innerHTML = "";
+}
+
+
+async function renderGraph(containerId, graphData, guard) {
+  console.log("RENDER GRAPH:", containerId, graphData?.nodes?.length, graphData?.edges?.length);
+
+  if (!graphData) return;
+  if (guard && !guard()) return;
+
+  await waitForNetworkReady();
+
+  const wrapper = document.getElementById(containerId);
+  const container = wrapper?.querySelector(".net-container");
+
+  console.log("WRAPPER:", wrapper);
+  console.log("INNER CONTAINER:", container);
+  console.log("VISIBLE:", isVisible(container));
+
+  if (!container) {
+    console.error("❌ Missing .net-container inside", containerId);
+    return;
+  }
+
+  if (!isVisible(container)) return;
+  if (guard && !guard()) return;
+
+  safeDispose(containerId);
+
+  await new Promise(r => requestAnimationFrame(r));
+  await new Promise(r => requestAnimationFrame(r));
+
+  if (guard && !guard()) return;
+
+  await window.Network.initOneGraph_safe({
+    containerId,
+    graphData,
+    containerOverride: container
+  });
+
+  console.log("INSTANCE AFTER INIT:", window.Network?.instances?.[containerId]);
+
+  if (guard && !guard()) return;
+}
+
+function highlightGenes(graphId, genes) {
+  if (!window.Network?.instances?.[graphId]) return;
+
+  if (window.Network.highlightGenesInGraph) {
+    window.Network.highlightGenesInGraph(graphId, genes);
+  }
+}
+
+function restoreGraphFromEnrichment(graphId) {
+  const inst = window.Network?.instances?.[graphId]
+  if (!inst?.graph) return
+
+  if (inst.isSupernodes && window.Network.clearHighlights) {
+    window.Network.clearHighlights(graphId)
+  }
+
+  if (!inst.isSupernodes) {
+    const graph = inst.graph
+    inst.activeGeneSet = null
+    inst.activeGeneSetKey = null
+
+    graph.forEachNode(n => {
+      graph.setNodeAttribute(n, "visible", true)
+      graph.setNodeAttribute(n, "highlighted", false)
+
+      const baseSize = graph.getNodeAttribute(n, "baseSize")
+      if (baseSize != null) {
+        graph.setNodeAttribute(n, "size", baseSize)
+      }
+
+      const labelBase = graph.getNodeAttribute(n, "label_base")
+      if (labelBase) graph.setNodeAttribute(n, "label", labelBase)
+    })
+
+    graph.forEachEdge(e => {
+      graph.setEdgeAttribute(e, "hidden", false)
+    })
+
+    inst.sigma.refresh()
+  }
+
+  subgraphMode[graphId] = false
+}
+
+function toggleSubgraph(graphId, genes) {
+
+  const inst = window.Network?.instances?.[graphId]
+  if (!inst?.graph) return
+
+  const graph = inst.graph
+  const active = !!subgraphMode[graphId]
+
+  if (active) {
+    graph.forEachNode(node => {
+      graph.setNodeAttribute(node, "visible", true)
+    })
+    subgraphMode[graphId] = false
+  } else {
+    graph.forEachNode(node => {
+      const label = graph.getNodeAttribute(node, "label") || node
+      const visible = genes.includes(label) || genes.includes(node)
+
+      graph.setNodeAttribute(node, "visible", visible)
+    })
+    subgraphMode[graphId] = true
+  }
+
+  inst.sigma.refresh()
+}
+
+
+
+function makeRowClickHandler(graphId) {
+
+  return (row, event) => {
+
+    const inst = window.Network?.instances?.[graphId]
+    if (!inst?.graph) return
+
+    const graph = inst.graph
+    const genes = Array.isArray(row?.Genes) ? row.Genes : []
+
+    if (!genes.length) return
+
+    // 🔥 map genes → actual graph nodes via label
+    const nodeIds = []
+
+    graph.forEachNode(n => {
+      const label = graph.getNodeAttribute(n, "label") || n
+      if (genes.includes(label)) {
+        nodeIds.push(n)
+      }
+    })
+
+    if (!nodeIds.length) return
+
+    // SHIFT → isolate
+    if (event?.shiftKey) {
+      event.preventDefault()
+      window.getSelection?.()?.removeAllRanges?.()
+
+      const subNodes = new Set(nodeIds)
+
+      graph.forEachNode(n => {
+        const keep = subNodes.has(n)
+        graph.setNodeAttribute(n, "visible", keep)
+        graph.setNodeAttribute(n, "highlighted", keep)
+
+        if (keep) {
+          const baseSize = graph.getNodeAttribute(n, "baseSize")
+          const currentSize = graph.getNodeAttribute(n, "size")
+          graph.setNodeAttribute(n, "size", baseSize ?? currentSize ?? 7)
+
+          const labelBase = graph.getNodeAttribute(n, "label_base")
+          if (labelBase) graph.setNodeAttribute(n, "label", labelBase)
+        } else {
+          graph.setNodeAttribute(n, "size", 0)
+          graph.setNodeAttribute(n, "label", "")
+        }
+      })
+
+      graph.forEachEdge(e => {
+      const s = graph.source(e)
+      const t = graph.target(e)
+      const keep = subNodes.has(s) && subNodes.has(t)
+      graph.setEdgeAttribute(e, "hidden", !keep)
+    })
+      
+      inst.activeGeneSet = null
+      inst.activeGeneSetKey = null
+      subgraphMode[graphId] = true
+      
+      if (inst.isSupernodes && window.Network.refreshHulls) {
+        window.Network.refreshHulls(graphId)
+      }
+
+      inst.sigma.refresh()
+      return
+    }
+
+    // normal highlight → KEEP using your working function
+    highlightGenes(graphId, genes)
+  }
+}
+
+function normalizeHeatmapData(raw) {
+  if (!raw) return {};
+
+  if (raw.databases) {
+    const out = {};
+    for (const [dbKey, dbObj] of Object.entries(raw.databases)) {
+      out[dbKey] = {};
+      const terms = dbObj?.terms || [];
+      terms.forEach(t => {
+        out[dbKey][t.description] = t.modules || [];
+      });
+    }
+    return out;
+  }
+
+  return raw;
+}
+
+function renderModuleHeatmap(direction) {
+  const raw = currentHeatmap[direction];
+  const normalized = normalizeHeatmapData(raw);
+  const targetId = direction === "increased" ? "inc-meta-heatmap" : "dec-meta-heatmap";
+  const target = document.getElementById(targetId);
+  if (!target) return;
+
+  target.innerHTML = "";
+
+  const dbKeys = Object.keys(normalized);
+  if (!dbKeys.length) {
+    target.innerHTML = "<p class='has-text-grey'>No enrichment heatmap available.</p>";
+    return;
+  }
+
+  const controls = document.createElement("div");
+  controls.className = "buttons mb-3";
+  target.appendChild(controls);
+
+  const topWrap = document.createElement("div");
+  topWrap.className = "select is-small mb-3";
+  topWrap.innerHTML = `
+    <select id="${targetId}-topn">
+      <option value="10">Top 10</option>
+      <option value="20" selected>Top 20</option>
+      <option value="30">Top 30</option>
+      <option value="all">All</option>
+    </select>
+  `;
+  target.appendChild(topWrap);
+
+  const downloadWrap = document.createElement("div");
+  downloadWrap.className = "dropdown is-right mb-3";
+  downloadWrap.innerHTML = `
+    <div class="dropdown-trigger">
+      <button class="button is-small is-light" type="button">
+        <span>Download</span>
+        <span class="icon is-small">▾</span>
+      </button>
+    </div>
+    <div class="dropdown-menu" role="menu">
+      <div class="dropdown-content">
+        <a class="dropdown-item" data-format="png">PNG</a>
+        <a class="dropdown-item" data-format="svg">SVG</a>
+      </div>
+    </div>
+  `;
+  target.appendChild(downloadWrap);
+
+  const plotWrap = document.createElement("div");
+  plotWrap.className = "plot-container";
+  plotWrap.innerHTML = `<svg width="100%"></svg>`;
+  target.appendChild(plotWrap);
+
+  const svgEl = plotWrap.querySelector("svg");
+  const topNSel = topWrap.querySelector("select");
+  const downloadTrigger = downloadWrap.querySelector(".dropdown-trigger");
+
+  let activeDb = dbKeys[0];
+
+  function redraw() {
+    const topN = topNSel.value === "all" ? "all" : parseInt(topNSel.value, 10);
+    controls.querySelectorAll("button").forEach(b => {
+      b.classList.toggle("is-primary", b.dataset.db === activeDb);
+      b.classList.toggle("is-light", b.dataset.db !== activeDb);
+    });
+    Enrichment.renderD3ModuleHeatmap(normalized, svgEl, {
+      dbKey: activeDb,
+      topN
+    });
+    const sliderId =
+  direction === "increased"
+  ? "inc-heat-text-slider"
+  : "dec-heat-text-slider"
+
+const slider = document.getElementById(sliderId)
+
+if (slider) {
+  const size = parseInt(slider.value)
+
+  svgEl
+    .querySelectorAll("text")
+    .forEach(t => t.style.fontSize = size + "px")
+}
+
+  }
+
+  dbKeys.forEach(dbKey => {
+    const btn = document.createElement("button");
+    btn.className = "button is-small is-light";
+    btn.dataset.db = dbKey;
+    btn.textContent = Utils.dbKeyToLabel(dbKey);
+    btn.onclick = () => {
+      activeDb = dbKey;
+      redraw();
+    };
+    controls.appendChild(btn);
+  });
+
+  topNSel.addEventListener("change", redraw);
+  downloadTrigger.addEventListener("click", e => {
+    e.preventDefault();
+    e.stopPropagation();
+    downloadWrap.classList.toggle("is-active");
+  });
+  downloadWrap.querySelectorAll("[data-format]").forEach(item => {
+    item.addEventListener("click", e => {
+      e.preventDefault();
+      downloadWrap.classList.remove("is-active");
+      const fmt = item.dataset.format;
+      Tables.downloadPlot(svgEl, fmt, `${direction}_go_term_modules_${activeDb}`);
+    });
+  });
+  document.addEventListener("click", () => downloadWrap.classList.remove("is-active"));
+  redraw();
+}
+
+
+function renderModuleEnrichment(direction, moduleId) {
+  const prefix = direction === "increased" ? "inc" : "dec";
+  const graphId = direction === "increased" ? "inc-module-network" : "dec-module-network";
+
+  Tables.mountModuleOrSupernodeEnrichment({
+    buttonsEl: document.getElementById(`${prefix}-module-db-buttons`),
+    contentEl: document.getElementById(`${prefix}-module-content`),
+    enrichmentData: currentEnrichment[direction],
+    heatmapData: currentGeneTerm[direction],
+    moduleKey: `Module ${moduleId}`,
+    direction: direction,
+    onRowClick: makeRowClickHandler(graphId),
+    onRestoreNetwork: () => restoreGraphFromEnrichment(graphId)
+  });
+}
+
+async function loadDirectionPayload(direction) {
+  const paths = currentResults?.directions?.[direction]?.paths;
+
+  const [superGraph, metaGraph, enrichJson, heatmapJson, geneTermJson] = await Promise.all([
+    fetchJSON(resultsNetworkURL(direction, "supernodes")),
+    fetchJSON(resultsNetworkURL(direction, "module_meta")),
+    fetchJSON(enrichmentURL(direction)),
+    fetchJSON(moduleHeatmapURL(direction)),                       // keep old meta heatmap
+    fetchJSON(resultsFileUrl(paths?.enrichment_gene_term))       // new gene-term heatmap
+  ]);
+
+  currentEnrichment[direction] = enrichJson || {};
+  currentHeatmap[direction] = heatmapJson || {};
+  currentGeneTerm[direction] = geneTermJson || {};
+
+  return { superGraph, metaGraph };
+}
+
+async function setupModuleSelector(direction, guard) {
+  const isInc = direction === "increased";
+  const selEl = isInc ? incModuleSel : decModuleSel;
+  const containerId = isInc ? "inc-module-network" : "dec-module-network";
+  const count = currentResults?.directions?.[direction]?.modules_count || 0;
+
+  selEl.innerHTML = "";
+
+  if (!count) {
+    safeDispose(containerId);
+    const prefix = isInc ? "increase" : "decrease";
+    document.getElementById(`${prefix}-module-db-buttons`).innerHTML = "";
+    document.getElementById(`${prefix}-module-content`).innerHTML = "<p class='has-text-grey'>No modules available.</p>";
+    return;
+  }
+
+  for (let i = 1; i <= count; i++) {
+    const opt = document.createElement("option");
+    opt.value = String(i);
+    opt.textContent = `Module ${i}`;
+    selEl.appendChild(opt);
+  }
+
+  selEl.onchange = async () => {
+  
+    if (activeTab !== (isInc ? "inc" : "dec")) return;
+  
+    const moduleId = selEl.value;
+  
+    // 1. render graph
+    const graph = await fetchJSON(resultsNetworkURL(direction, "module", moduleId));
+    await renderGraph(containerId, graph, guard);
+  
+    // 2. 🔥 IMPORTANT: rebind tabs to NEW module
+    setupModuleTabs(direction, moduleId);
+  };
+
+   selEl.value = "1";
+   
+   const firstGraph = await fetchJSON(resultsNetworkURL(direction, "module", 1));
+   await renderGraph(containerId, firstGraph, guard);
+   
+   // 🔥 bind tabs to module 1
+   setupModuleTabs(direction, 1);
+}
+
+async function renderCross(guard) {
+
+  if (!HAS_CROSS || !currentCross) return
+
+  const dirObj = currentCross[crossDir]
+  if (!dirObj) return
+
+  if (crossView === "kde") {
+
+    await renderGraph("cross-kde-network", dirObj.kde_overlap, guard)
+
+  }
+
+else if (crossView === "modnet") {
+    await renderGraph("cross-module-network", dirObj.module_similarity, guard)
+
+  }
+
+  else if (crossView === "heat") {
+
+    if (guard && !guard()) return
+
+    const container = document.getElementById("cross-heatmap")
+    if (!container) return
+
+    container.innerHTML = `<svg width="100%"></svg>`
+
+    const svg = container.querySelector("svg")
+    const heatData = dirObj.module_matrix
+
+    if (heatData?.labels && heatData?.matrix) {
+
+      Enrichment.renderD3ModuleSimilarityHeatmap(
+        {
+          labels: heatData.labels,
+          matrix: heatData.matrix
+        },
+        svg,
+        {}
+      )
+
+      const slider = document.getElementById("cross-heat-text-slider")
+
+      if (slider) {
+        const size = parseInt(slider.value)
+
+        svg
+          .querySelectorAll("text")
+          .forEach(t => t.style.fontSize = size + "px")
+      }
+
+    } else {
+
+      container.innerHTML =
+        "<p class='has-text-grey'>No module similarity matrix available.</p>"
+
+    }
+
+  }
+
+}
+
+
+function renderSupernodesEnrichment(direction) {
+  const prefix = direction === "increased" ? "inc" : "dec";
+  const graphId = direction === "increased" ? "inc-supernodes" : "dec-supernodes";
+
+  Tables.mountModuleOrSupernodeEnrichment({
+    buttonsEl: document.getElementById(`${prefix}-supernodes-db-buttons`),
+    contentEl: document.getElementById(`${prefix}-supernodes-content`),
+    enrichmentData: currentEnrichment[direction],
+    heatmapData: currentGeneTerm[direction],
+    moduleKey: "__supernodes__",
+    direction: direction,
+    onRowClick: makeRowClickHandler(graphId),
+    onRestoreNetwork: () => restoreGraphFromEnrichment(graphId)
+  });
+}
+
+async function renderDirection(direction, guard) {
+  const isInc = direction === "increased";
+  const superId = isInc ? "inc-supernodes" : "dec-supernodes";
+  const metaId  = isInc ? "inc-module-meta" : "dec-module-meta";
+
+  const payload = await loadDirectionPayload(direction);
+  if (guard && !guard()) return;
+
+  if (!payload?.superGraph?.nodes?.length) {
+    console.warn(`No graph data for ${direction}`);
+    return;
+  }
+
+  await renderGraph(superId, payload.superGraph, guard);
+
+  const ready = await waitForLegendReady(superId);
+  if (ready) {
+    buildModuleLegend(superId);
+  } else {
+    console.warn("Skipping legend build for", superId);
+  }
+
+  if (guard && !guard()) return;
+
+  await renderGraph(metaId, payload.metaGraph, guard);
+
+  if (guard && !guard()) return;
+
+  renderSupernodesEnrichment(direction);
+  setupSupernodesTabs(direction);
+  renderModuleHeatmap(direction);
+  await setupModuleSelector(direction, guard);
+}
+
+
+function downloadSupernodes(direction){
+
+  const fmt =
+    document.getElementById(`${direction === "increased" ? "inc" : "dec"}-supernodes-format`).value
+
+  const url =
+    `${APP_BASE}/download/supernodes/${UUID}/${currentExperiment}/${getPropagation()}/${direction}/${fmt}`
+
+  window.location.href = url
+}
+
+
+function downloadModule(direction){
+
+  const prefix = direction === "increased" ? "inc" : "dec"
+
+  const module =
+    document.getElementById(`${prefix}-module-selector`).value
+
+  const fmt =
+    document.getElementById(`${prefix}-module-format`).value
+
+  const url =
+    `${APP_BASE}/download/module/${UUID}/${currentExperiment}/${getPropagation()}/${direction}/${module}/${fmt}`
+
+  window.location.href = url
+}
+
+document.getElementById("inc-supernodes-download").onclick =
+  () => downloadSupernodes("increased");
+
+document.getElementById("dec-supernodes-download").onclick =
+  () => downloadSupernodes("decreased");
+
+document.getElementById("inc-module-download").onclick =
+  () => downloadModule("increased");
+
+document.getElementById("dec-module-download").onclick =
+  () => downloadModule("decreased");
+
+async function renderActiveTab() {
+  if (!currentResults) return;
+
+  const myGen = ++renderGeneration;
+  const guard = () => myGen === renderGeneration;
+
+  if (activeTab === "cross") await renderCross(guard);
+  if (activeTab === "inc") await renderDirection("increased", guard);
+  if (activeTab === "dec") await renderDirection("decreased", guard);
+}
+
+function populateHeaderAndMetrics(d) {
+  const meta = d.run_metadata || {};
+  const manifest = d.manifest || {};
+
+  const uuidValue = meta.uuid || UUID;
+
+  document.getElementById("run-uuid").textContent = uuidValue;
+
+  document.getElementById("copy-uuid").onclick = () => {
+    navigator.clipboard.writeText(uuidValue);
+  };
+
+  runMeta.innerHTML = `
+    RWR damping: <b>${meta.propagation || d.propagation || "?"}</b>
+    &nbsp;•&nbsp;
+    KDE: <b>${meta.kde || "?"}</b>
+    &nbsp;•&nbsp;
+    phuEGO <b>${meta.phuego_version || "?"}</b>
+    &nbsp;•&nbsp;
+    Generated: ${meta.generated_at || "?"}
+  `;
+
+  renderDashboard(d);
+  renderSeedCoverage(d).catch(err => {
+    console.warn("Could not render seed coverage:", err);
+  });
+
+  if (manifest.input_parameters) {
+    inputBox.style.display = "";
+    inputPre.textContent = JSON.stringify(manifest.input_parameters, null, 2);
+  } else {
+    inputBox.style.display = "none";
+  }
+}
+
+async function switchExperiment(exp) {
+  currentExperiment = exp;
+
+  disposeCrossGraphs();
+  disposeIncGraphs();
+  disposeDecGraphs();
+
+  currentEnrichment = { increased: null, decreased: null };
+  currentHeatmap = { increased: null, decreased: null };
+
+  currentResults = await fetchJSON(RESULTS_JSON(exp));
+  window.__CURRENT_RESULTS__ = currentResults;   // ✅ ADD THIS
+  const prop = getPropagation();
+  currentCross = (HAS_CROSS && prop)
+    ? await fetchJSON(CROSS_JSON(prop)).catch(() => null)
+    : null;
+window.currentCross = currentCross
+  populateHeaderAndMetrics(currentResults);
+  await renderActiveTab();
+}
+
+function scrollToPageTopAfterLayout() {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" })
+    })
+  })
+}
+
+async function loadStatus() {
+  try {
+    const r = await fetch(`${STATUS_URL}?t=${Date.now()}`, { cache: "no-store" });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+
+    const text = await r.text();
+
+    let s;
+    try {
+      s = JSON.parse(text);
+    } catch (err) {
+      console.warn("progress.json not yet valid JSON, skipping this refresh");
+      return;
+    }
+
+    const status = s.status || "unknown";
+    const step = s.step || "";
+    const substep = s.substep || "";
+    const message = s.message || "";
+
+    const total = s.batch?.total_experiments ?? "—";
+    const finished = s.batch?.finished_experiments ?? "—";
+    const currentExp = s.batch?.current_experiment || "";
+
+    const progCurrent = s.progress?.current ?? null;
+    const progTotal = s.progress?.total ?? null;
+    const progPercent = s.progress?.percent ?? null;
+    const progUnit = s.progress?.unit || "";
+
+    let color = "is-light";
+    let icon = "⏳";
+    let label = "Unknown";
+    if (status !== "completed" && status !== "done") {
+     clearReloadedAfterCompletion();
+    }
+
+    if (status === "submitted") {
+      color = "is-info";
+      icon = "📨";
+      label = "Submitted";
+    } else if (status === "running") {
+      color = "is-warning";
+      icon = "🟡";
+      label = `Running (${finished} / ${total})`;
+
+      if (currentExp) label += ` — ${currentExp}`;
+      if (step) label += ` — ${step}`;
+      if (substep) label += ` / ${substep}`;
+      if (progPercent != null) label += ` (${progPercent}%)`;
+      } else if (status === "completed" || status === "done") {
+        color = "is-success";
+        icon = "🟢";
+        label = `Completed (${total})`;
+      
+        if (!alreadyReloadedAfterCompletion()) {
+          markReloadedAfterCompletion();
+          setTimeout(() => {
+            window.location.reload();
+          }, 800);
+        }
+      }
+      else if (status === "failed") {
+      color = "is-danger";
+      icon = "🔴";
+      label = "Failed";
+      if (message) label += ` — ${message}`;
+    } else if (status === "cancelled" || status === "canceled") {
+      color = "is-dark";
+      icon = "⏹";
+      label = "Cancelled";
+      if (message) label += ` — ${message}`;
+    }
+
+    let detailsHtml = "";
+
+    if (message) {
+      detailsHtml += `<div class="is-size-7 mt-1">${message}</div>`;
+    }
+
+    if (progCurrent != null && progTotal != null) {
+      detailsHtml += `
+        <div class="is-size-7 mt-1">
+          Progress: ${progCurrent} / ${progTotal}${progUnit ? ` ${progUnit}` : ""}
+        </div>
+      `;
+    }
+
+    if (progPercent != null) {
+      detailsHtml += `
+        <progress class="progress is-small mt-2"
+                  value="${progPercent}"
+                  max="100">
+          ${progPercent}%
+        </progress>
+      `;
+    }
+
+    const canCancel = (status === "submitted" || status === "running") && !cancelRunRequested;
+    const cancelButtonHtml = canCancel
+      ? `<button id="cancel-run-btn" class="button is-small is-danger is-light" type="button">Stop run</button>`
+      : "";
+
+    statusBox.className = `notification ${color} is-small mt-2`;
+    statusBox.innerHTML = `
+      <div class="level is-mobile mb-0">
+        <div class="level-left">
+          <div><strong>${icon} ${label}</strong>${detailsHtml}</div>
+        </div>
+        <div class="level-right">
+          ${cancelButtonHtml}
+        </div>
+      </div>
+    `;
+
+    document.getElementById("cancel-run-btn")?.addEventListener("click", cancelRun);
+
+  } catch (err) {
+    console.warn("loadStatus failed:", err);
+    statusBox.className = "notification is-light is-small mt-2";
+    statusBox.textContent = "Status unavailable.";
+  }
+}
+
+async function cancelRun() {
+  if (cancelRunRequested) return;
+
+  const ok = window.confirm(
+    "Stop this phuEGO run? Partial files may remain, but the analysis will stop at the next safe checkpoint."
+  );
+  if (!ok) return;
+
+  cancelRunRequested = true;
+
+  try {
+    const r = await fetch(`${APP_BASE}/cancel_run/${encodeURIComponent(UUID)}`, {
+      method: "POST",
+      cache: "no-store"
+    });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    await loadStatus();
+  } catch (err) {
+    console.warn("cancelRun failed:", err);
+    cancelRunRequested = false;
+    window.alert("Could not request cancellation. Please try again.");
+  }
+}
+
+function setActiveTab(next) {
+  activeTab = next;
+
+  [tabCross, tabInc, tabDec].forEach(li => li.classList.remove("is-active"));
+  if (next === "cross") tabCross.classList.add("is-active");
+  if (next === "inc") tabInc.classList.add("is-active");
+  if (next === "dec") tabDec.classList.add("is-active");
+
+  panelCross.classList.toggle("is-hidden", next !== "cross");
+  panelInc.classList.toggle("is-hidden", next !== "inc");
+  panelDec.classList.toggle("is-hidden", next !== "dec");
+
+  if (next !== "cross") disposeCrossGraphs();
+  if (next !== "inc") disposeIncGraphs();
+  if (next !== "dec") disposeDecGraphs();
+
+  renderActiveTab().catch(console.error);
+}
+
+function setCrossDir(nextDir) {
+  crossDir = nextDir;
+
+  crossDirInc.classList.toggle("is-link", nextDir === "increased");
+  crossDirInc.classList.toggle("is-light", nextDir !== "increased");
+  crossDirDec.classList.toggle("is-danger", nextDir === "decreased");
+  crossDirDec.classList.toggle("is-light", nextDir !== "decreased");
+
+  renderActiveTab().catch(console.error);
+}
+
+function setCrossView(nextView) {
+  crossView = nextView;
+
+  crossKdeWrap.classList.toggle("is-hidden", nextView !== "kde");
+  crossModWrap.classList.toggle("is-hidden", nextView !== "modnet");
+  crossHeatWrap.classList.toggle("is-hidden", nextView !== "heat");
+
+  renderActiveTab().catch(console.error);
+}
+
+tabCross.onclick = () => HAS_CROSS && setActiveTab("cross");
+tabInc.onclick = () => setActiveTab("inc");
+tabDec.onclick = () => setActiveTab("dec");
+
+crossDirInc.onclick = () => setCrossDir("increased");
+crossDirDec.onclick = () => setCrossDir("decreased");
+
+crossViewKde.onclick = () => setCrossView("kde");
+crossViewMod.onclick = () => setCrossView("modnet");
+crossViewHeat.onclick = () => setCrossView("heat");
+
+toggleBtn.onclick = () => {
+  const open = inputContent.style.display !== "none";
+  inputContent.style.display = open ? "none" : "";
+  toggleBtn.textContent = open ? "Show" : "Hide";
+};
+
+sel.onchange = async () => {
+  await switchExperiment(sel.value);
+};
+
+sel.innerHTML = "";
+for (const e of EXPERIMENTS) {
+  const opt = document.createElement("option");
+  opt.value = e;
+  opt.textContent = e;
+  sel.appendChild(opt);
+}
+
+if (!HAS_CROSS) {
+  tabCross.classList.add("is-hidden");
+  panelCross.classList.add("is-hidden");
+  tabInc.classList.add("is-active");
+  panelInc.classList.remove("is-hidden");
+  panelDec.classList.add("is-hidden");
+  activeTab = "inc";
+} else {
+  setCrossDir("increased");
+  setCrossView("kde");
+}
+
+
+(async function init() {
+  await loadStatus();
+  setInterval(loadStatus, 3000);
+
+  if (!EXPERIMENTS.length) {
+    runMeta.textContent = "No experiments found for this UUID.";
+    return;
+  }
+
+  sel.value = EXPERIMENTS[0];
+  await switchExperiment(EXPERIMENTS[0]);
+  scrollToPageTopAfterLayout();
+})();
+
+// ---------------------------------------------------
+// Expand / collapse supernodes
+// ---------------------------------------------------
+
+document.getElementById("inc-supernodes-expand").onclick =
+  () => window.Network.expandCollapseAllSupernodes("inc-supernodes", true);
+
+document.getElementById("inc-supernodes-collapse").onclick =
+  () => window.Network.expandCollapseAllSupernodes("inc-supernodes", false);
+
+document.getElementById("dec-supernodes-expand").onclick =
+  () => window.Network.expandCollapseAllSupernodes("dec-supernodes", true);
+
+document.getElementById("dec-supernodes-collapse").onclick =
+  () => window.Network.expandCollapseAllSupernodes("dec-supernodes", false);
+
+
+function bindGraphControls(prefix, containerId){
+
+  const node = document.getElementById(prefix + "-node-slider")
+  const edge = document.getElementById(prefix + "-edge-slider")
+  const label = document.getElementById(prefix + "-label-slider")
+  const weight = document.getElementById(prefix + "-weight-slider")   // ✅ ADD
+  const reset = document.getElementById(prefix + "-reset")
+
+  if(node)
+    node.addEventListener("input", e =>
+      scaleNodes(containerId, parseFloat(e.target.value))
+    )
+
+  if(edge)
+    edge.addEventListener("input", e =>
+      scaleEdges(containerId, parseFloat(e.target.value))
+    )
+
+  if(label)
+    label.addEventListener("input", e =>
+      scaleLabels(containerId, parseFloat(e.target.value))
+    )
+
+  // ✅ ADD THIS BLOCK
+  if(weight)
+    weight.addEventListener("input", e =>
+      filterEdgesByWeight(containerId, parseFloat(e.target.value))
+    )
+
+
+  if(reset)
+    reset.onclick = () => resetGraphSizes(containerId)
+
+}
+
+
+
+function scaleNodes(containerId, scale){
+
+  const inst = window.Network?.instances?.[containerId]
+  if(!inst?.graph) return
+
+  const graph = inst.graph
+
+  graph.forEachNode(node => {
+
+    let base = graph.getNodeAttribute(node,"baseSize")
+
+    if(base == null){
+      base = graph.getNodeAttribute(node,"size") || 1
+      graph.setNodeAttribute(node,"baseSize", base)
+    }
+
+    const newSize = base * (1 + (scale - 1))
+    graph.setNodeAttribute(node,"size", newSize)
+
+  })
+
+  inst.sigma.refresh()
+
+}
+
+function scaleEdges(containerId, scale){
+
+  const inst = window.Network?.instances?.[containerId]
+  if(!inst?.graph) return
+
+  const graph = inst.graph
+
+  graph.forEachEdge(edge => {
+
+    const base = graph.getEdgeAttribute(edge,"baseSize") ??
+                 graph.getEdgeAttribute(edge,"size") ?? 1
+
+    graph.setEdgeAttribute(edge,"baseSize", base)
+    graph.setEdgeAttribute(edge,"size", base * scale)
+
+  })
+
+  inst.sigma.refresh()
+}
+
+
+function scaleLabels(containerId, scale){
+
+  const inst = window.Network?.instances?.[containerId]
+  if(!inst?.sigma) return
+
+  inst.sigma.setSetting("labelSize", 14 * scale)
+
+  inst.sigma.refresh()
+
+}
+
+
+function resetGraphSizes(containerId){
+
+  const inst = window.Network?.instances?.[containerId]
+  if(!inst?.graph) return
+
+  const graph = inst.graph
+
+  // --- reset graph ---
+  graph.forEachNode(node=>{
+    const base = graph.getNodeAttribute(node,"baseSize")
+    if(base!=null) graph.setNodeAttribute(node,"size",base)
+  })
+
+  graph.forEachEdge(edge=>{
+    const base = graph.getEdgeAttribute(edge,"baseSize")
+    if(base!=null) graph.setEdgeAttribute(edge,"size",base)
+  })
+
+  inst.sigma.setSetting("labelSize",14)
+  inst.sigma.refresh()
+
+  // --- 🔥 NEW: reset sliders ---
+  const prefix = containerId.replace("-network","")
+
+  const nodeSlider  = document.getElementById(prefix + "-node-slider")
+  const edgeSlider  = document.getElementById(prefix + "-edge-slider")
+  const labelSlider = document.getElementById(prefix + "-label-slider")
+  const weightSlider = document.getElementById(prefix + "-weight-slider")
+  if(nodeSlider)  nodeSlider.value  = 1
+  if(edgeSlider)  edgeSlider.value  = 1
+  if(labelSlider) labelSlider.value = 1
+if(weightSlider){
+  weightSlider.value = weightSlider.defaultValue
+  filterEdgesByWeight(containerId, parseFloat(weightSlider.value))
+}
+}
+
+bindGraphControls("inc-supernodes","inc-supernodes")
+bindGraphControls("dec-supernodes","dec-supernodes")
+
+bindGraphControls("inc-module","inc-module-network")
+bindGraphControls("dec-module","dec-module-network")
+
+bindGraphControls("cross-kde","cross-kde-network")
+bindGraphControls("cross-module","cross-module-network")
+
+
+document
+.querySelectorAll(".plot-container svg text")
+.forEach(t => {
+  t.style.fontSize = DISPLAY.fontSize + "px"
+})
+document
+.getElementById("cross-heat-text-slider")
+.addEventListener("input", e => {
+
+  const size = parseInt(e.target.value)
+
+  document
+    .querySelectorAll("#cross-heatmap svg text")
+    .forEach(t => t.style.fontSize = size + "px")
+
+})
+
+document
+.getElementById("inc-heat-text-slider")
+.addEventListener("input", e => {
+
+  const size = parseInt(e.target.value)
+
+  document
+    .querySelectorAll("#inc-meta-heatmap svg text")
+    .forEach(t => t.style.fontSize = size + "px")
+
+})
+
+document
+.getElementById("dec-heat-text-slider")
+.addEventListener("input", e => {
+
+  const size = parseInt(e.target.value)
+
+  document
+    .querySelectorAll("#dec-meta-heatmap svg text")
+    .forEach(t => t.style.fontSize = size + "px")
+
+})
+
+function getLegendModuleList(attrs){
+  if (Array.isArray(attrs.superList) && attrs.superList.length) return attrs.superList;
+  if (Array.isArray(attrs.modules) && attrs.modules.length) return attrs.modules;
+  if (typeof attrs.module === "string" && attrs.module) return [attrs.module];
+  if (typeof attrs.module_id === "string" && attrs.module_id) return [attrs.module_id];
+  if (typeof attrs.cluster === "string" && attrs.cluster) return [attrs.cluster];
+  return [];
+}
+
+
+function buildModuleLegend(networkId){
+
+  const inst = window.Network.instances?.[networkId]
+  if(!inst) return
+
+  const graph = inst.graph
+  const colorMap = inst.clusterColorMap || {}
+
+  const legend = document.getElementById(`${networkId}-legend`)
+  if(!legend) return
+
+  legend.innerHTML = ""
+
+  const counts = {}
+
+graph.forEachNode(n => {
+  const attrs = graph.getNodeAttributes(n)
+  const list = getLegendModuleList(attrs)
+  const primary = list[0]
+
+  if (primary) {
+    counts[primary] = (counts[primary] || 0) + 1
+  }
+})
+
+  Object.entries(colorMap)
+    .sort((a,b)=>a[0].localeCompare(b[0]))
+    .forEach(([module,color]) => {
+
+      const item = document.createElement("span")
+
+      item.style.display="inline-flex"
+      item.style.alignItems="center"
+      item.style.marginRight="14px"
+      item.style.cursor="pointer"
+      item.style.fontSize="12px"
+
+      const hex = color.replace(/rgba?\(([^)]+)\)/, (_,v)=>{
+        const [r,g,b] = v.split(",").map(x=>parseInt(x))
+        return "#" + [r,g,b].map(x=>x.toString(16).padStart(2,"0")).join("")
+      })
+
+      const count = counts[module] || 0
+
+      item.innerHTML = `
+        <span style="
+          width:12px;
+          height:12px;
+          background:${hex};
+          display:inline-block;
+          margin-right:6px;
+          border-radius:2px"></span>
+        ${module} (${count})
+      `
+item.onclick = (event) => {
+  const isolate = event.shiftKey
+
+  if (isolate) {
+    // strict induced subgraph: only primary members of this module
+    graph.forEachNode(n => {
+      const attrs = graph.getNodeAttributes(n)
+      const list = getLegendModuleList(attrs)
+      const primary = list[0]
+      const isInModule = primary === module
+
+      graph.setNodeAttribute(n, "visible", isInModule)
+      graph.setNodeAttribute(n, "highlighted", isInModule)
+
+      if (isInModule) {
+        graph.setNodeAttribute(n, "size", 7)
+        graph.setNodeAttribute(n, "label", graph.getNodeAttribute(n, "label_base"))
+      } else {
+        graph.setNodeAttribute(n, "size", 0)
+        graph.setNodeAttribute(n, "label", "")
+      }
+    })
+
+    if (window.Network.refreshHulls) {
+      window.Network.refreshHulls(networkId)
+    }
+
+  } else {
+    // collapsed baseline + highlight only primary members
+    graph.forEachNode(n => {
+      const attrs = graph.getNodeAttributes(n)
+      const list = getLegendModuleList(attrs)
+      const primary = list[0]
+      const isInModule = primary === module
+      const isPurple = !!attrs.isPurple
+
+      graph.setNodeAttribute(n, "highlighted", isInModule)
+
+      if (isPurple) {
+        graph.setNodeAttribute(n, "visible", true)
+        graph.setNodeAttribute(n, "size", 7)
+        graph.setNodeAttribute(n, "label", attrs.label_base)
+      } else {
+        graph.setNodeAttribute(n, "visible", false)
+        graph.setNodeAttribute(n, "size", 0)
+        graph.setNodeAttribute(n, "label", "")
+      }
+    })
+
+    if (window.Network.refreshHulls) {
+      window.Network.refreshHulls(networkId)
+    }
+  }
+
+  inst.sigma.refresh()
+}
+ 
+      legend.appendChild(item)
+
+    })
+}
+
+
+async function waitForLegendReady(containerId, timeout = 2000) {
+  const start = performance.now();
+
+  while (performance.now() - start < timeout) {
+    const inst = window.Network?.instances?.[containerId];
+
+    if (inst && inst.clusterColorMap && Object.keys(inst.clusterColorMap).length > 0) {
+      return true;
+    }
+
+    await new Promise(r => setTimeout(r, 50));
+  }
+
+  console.warn("⚠️ Legend not ready for", containerId);
+  return false;
+}
+
+document.getElementById("inc-clear-highlight").onclick = () => {
+  window.Network.clearHighlights("inc-supernodes");
+};
+
+document.getElementById("dec-clear-highlight").onclick = () => {
+  window.Network.clearHighlights("dec-supernodes");
+};
+
+function filterEdgesByWeight(containerId, threshold){
+
+  const inst = window.Network?.instances?.[containerId]
+  if(!inst?.graph) return
+
+  const graph = inst.graph
+
+  graph.forEachEdge(edge => {
+
+let norm = graph.getEdgeAttribute(edge, "weight");
+
+if (norm == null) {
+  const w = graph.getEdgeAttribute(edge, "weight") || 0;
+  norm = Math.min(1, Math.log1p(w));
+}
+    const hide = norm < threshold
+
+    graph.setEdgeAttribute(edge, "hidden", hide)
+
+  })
+
+  inst.sigma.refresh()
+}
+
+
+</script>

@@ -1,0 +1,26 @@
+networks:
+  IntAct phuEGO:
+    folder: support_data_phuego
+    enabled: true
+    default: true
+    zenodo_url: https://zenodo.org/records/19926624/files/support_data_phuego.tar?download=1
+
+  String700:
+    folder: support_data_string700
+    enabled: true
+    zenodo_url: https://zenodo.org/records/19926624/files/support_data_string700.tar?download=1
+
+  String900:
+    folder: support_data_string900
+    enabled: false
+    zenodo_url: https://zenodo.org/records/19926624/files/support_data_string900.tar?download=1
+
+  IntAct:
+    folder: support_data_intact
+    enabled: false
+    zenodo_url: https://zenodo.org/records/19926624/files/support_data_intact.tar?download=1
+
+  IntAct_045:
+    folder: support_data_intact_045
+    enabled: false
+    zenodo_url: https://zenodo.org/records/19926624/files/support_data_intact_045.tar?download=1

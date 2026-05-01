@@ -1,0 +1,18 @@
+services:
+  phuegoweb:
+    image: phuegoweb-local:latest
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      PY4WEB_PASSWORD: phuegoweb
+      MPLCONFIGDIR: /tmp/matplotlib
+      XDG_CACHE_HOME: /tmp
+    volumes:
+      - ./support_data:/opt/py4web/apps/phuEGOweb/support_data
+      - ./results:/opt/py4web/apps/phuEGOweb/results
+      - ./databases:/opt/py4web/apps/phuEGOweb/databases
+      - ./uploads:/opt/py4web/apps/phuEGOweb/uploads
+      - ./phuego_config.yaml:/opt/py4web/apps/phuEGOweb/phuego_config.yaml

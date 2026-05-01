@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<html class="theme-light">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>phuEGO</title>
+
+    <!-- Bulma -->
+    <link rel="stylesheet" href="https://unpkg.com/bulma@1.0.2/css/bulma.min.css" />
+
+    <!-- <link rel="icon" type="image/png" href="[[=URL('static/images/favicon.png')]]" /> -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="[[=URL('index')]]">
+           <!--   <img src="[[=URL('static/images/logo_placeholder.png')]]" alt="phuEGO logo" height="28" />-->
+          </a>
+
+          <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMain">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div id="navbarMain" class="navbar-menu">
+          <div class="navbar-end">
+            <a class="navbar-item" href="[[=URL('index')]]">phuEGO</a>
+            <a class="navbar-item" href="[[=URL('submit')]]">Phospho phuEGO</a>
+            <a class="navbar-item" href="[[=URL('sc_phuego_submit')]]">Single Cell phuEGO</a>
+            <a class="navbar-item" href="[[=URL('custom_phuego_submit')]]">Custom phuEGO</a>
+            <a class="navbar-item" href="[[=URL('retrieve')]]">Retrieve</a>
+            <a class="navbar-item" href="[[=URL('setup')]]">Setup</a>
+            <a class="navbar-item" href="[[=URL('about')]]">About</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content from pages -->
+    <main>
+      [[include]]
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-6">
+      <div class="container has-text-centered">
+        <p class="is-size-7">
+          &copy;  phuEGO — powered by py4web + Bulma
+        </p>
+      </div>
+    </footer>
+
+    <!-- Navbar burger toggle -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.from(document.querySelectorAll('.navbar-burger'));
+        $navbarBurgers.forEach(el => {
+          el.addEventListener('click', () => {
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+            el.classList.toggle('is-active');
+            $target.classList.toggle('is-active');
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

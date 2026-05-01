@@ -1,0 +1,256 @@
+[[extend "layout.html"]]
+
+<style>
+.setup-hero {
+  background: #f3f7fb;
+  border-bottom: 1px solid #e1e7ef;
+}
+.setup-card {
+  border: 1px solid #e4e9f0;
+  border-radius: 8px;
+  height: 100%;
+}
+.setup-path {
+  overflow-wrap: anywhere;
+}
+.status-pill {
+  min-width: 5.5rem;
+}
+.setup-progress {
+  display: none;
+}
+.setup-progress.is-active {
+  display: block;
+}
+</style>
+
+<section class="section setup-hero">
+  <div class="container">
+    <h1 class="title is-2">phuEGOweb Setup</h1>
+    <p class="subtitle is-5">
+      Install one or more network bundles, then activate the installed networks used by the submission forms.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    [[if message:]]
+      <div class="notification is-success is-light">[[=message]]</div>
+    [[pass]]
+
+    [[if error:]]
+      <div class="notification is-danger is-light">[[=error]]</div>
+    [[pass]]
+
+    [[if not setup_complete:]]
+      <div class="notification is-warning is-light">
+        No enabled network is currently installed. Download and extract at least one bundle before running analyses.
+      </div>
+    [[else:]]
+      <div class="notification is-success is-light">
+        Ready: [[=", ".join(item["name"] for item in installed_enabled)]].
+      </div>
+    [[pass]]
+
+    <div class="content">
+      <h2>Network Bundles</h2>
+      <p>
+        Each Zenodo archive contains one network support-data folder plus the small shared files required at the root of <code>support_data</code>.
+        Use the install button to download and extract a bundle directly into the mounted support-data folder used by the running app.
+      </p>
+      <p>
+        Docker resolves this mounted folder for each user, so the setup process does not depend on a specific host path such as <code>/Volumes/Untitled</code>.
+      </p>
+    </div>
+
+    <form method="post">
+      <div class="columns is-multiline">
+        [[for item in network_status:]]
+          <div class="column is-6">
+            <article class="box setup-card">
+              <div class="level is-mobile mb-2">
+                <div class="level-left">
+                  <div>
+                    <h3 class="title is-5 mb-1">[[=item["name"]]]</h3>
+                    <p class="is-size-7 setup-path"><code>[[=item["folder"]]]</code></p>
+                  </div>
+                </div>
+                <div class="level-right">
+                  [[if item["installed"]:]]
+                    <span class="tag is-success status-pill">Installed</span>
+                  [[else:]]
+                    <span class="tag is-warning status-pill">Missing</span>
+                  [[pass]]
+                </div>
+              </div>
+
+              <p class="is-size-7 setup-path mb-3">
+                Install folder: <code>support_data/[[=item["folder"]]]</code>
+              </p>
+
+              <div class="field">
+                <label class="checkbox">
+                  <input
+                    type="checkbox"
+                    name="network_[[=setup_network_key(item["name"])]]"
+                    value="1"
+                    [[if item["enabled"] and item["installed"]:]]checked[[pass]]
+                    [[if not item["installed"]:]]disabled[[pass]]
+                  >
+                  Show this network in phuEGOweb
+                  [[if not item["installed"]:]]
+                    <span class="help is-size-7">Available after installation.</span>
+                  [[pass]]
+                </label>
+              </div>
+
+              <div class="field">
+                <label class="radio">
+                  <input
+                    type="radio"
+                    name="default_network"
+                    value="[[=item["name"]]]"
+                    [[if item["default"] and item["installed"]:]]checked[[pass]]
+                    [[if not item["installed"]:]]disabled[[pass]]
+                  >
+                  Use as default
+                  [[if not item["installed"]:]]
+                    <span class="help is-size-7">Available after installation.</span>
+                  [[pass]]
+                </label>
+              </div>
+
+              [[if item["zenodo_url"]:]]
+                <div class="buttons">
+                  [[if not item["installed"]:]]
+                    <button
+                      class="button is-link is-small js-install-network"
+                      type="button"
+                      data-key="[[=setup_network_key(item["name"])]]"
+                      data-url="[[=URL('setup/download', setup_network_key(item["name"]))]]"
+                    >
+                      Install from Zenodo
+                    </button>
+                  [[pass]]
+                  <a class="button is-link is-light is-small" href="[[=item["zenodo_url"]]]">
+                    Manual download
+                  </a>
+                </div>
+                <div
+                  class="setup-progress js-download-progress"
+                  data-key="[[=setup_network_key(item["name"])]]"
+                >
+                  <progress class="progress is-link is-small mb-2" value="0" max="100">0%</progress>
+                  <p class="is-size-7 js-download-message"></p>
+                </div>
+              [[pass]]
+            </article>
+          </div>
+        [[pass]]
+      </div>
+
+      <div class="field mt-4">
+        <button class="button is-link" type="submit">Save Installed Networks</button>
+        <a class="button is-light" href="[[=URL('index')]]">Open phuEGOweb</a>
+      </div>
+    </form>
+
+  </div>
+</section>
+
+<script>
+(() => {
+  const statusUrl = "[[=URL('setup/download_status')]]";
+  const buttons = Array.from(document.querySelectorAll(".js-install-network"));
+  const progressBlocks = new Map(
+    Array.from(document.querySelectorAll(".js-download-progress")).map((el) => [el.dataset.key, el])
+  );
+  let polling = false;
+  let sawActiveDownload = false;
+
+  function formatBytes(value) {
+    if (!value) return "";
+    const units = ["B", "KB", "MB", "GB"];
+    let size = value;
+    let unit = 0;
+    while (size >= 1024 && unit < units.length - 1) {
+      size /= 1024;
+      unit += 1;
+    }
+    return `${size.toFixed(unit === 0 ? 0 : 1)} ${units[unit]}`;
+  }
+
+  function renderDownload(key, info) {
+    const block = progressBlocks.get(key);
+    if (!block || !info || !info.status) return;
+
+    block.classList.add("is-active");
+    const progress = block.querySelector("progress");
+    const message = block.querySelector(".js-download-message");
+    const percent = info.percent == null ? 0 : Number(info.percent);
+    progress.value = percent;
+    progress.textContent = `${percent}%`;
+
+    let detail = info.message || info.status;
+    if (info.status === "downloading" && info.received) {
+      detail += ` ${formatBytes(info.received)}`;
+      if (info.total) detail += ` / ${formatBytes(info.total)}`;
+    }
+    if (info.error) detail += ` ${info.error}`;
+    message.textContent = detail;
+  }
+
+  async function pollStatus() {
+    if (polling) return;
+    polling = true;
+
+    const timer = setInterval(async () => {
+      try {
+        const response = await fetch(statusUrl, { cache: "no-store" });
+        const payload = await response.json();
+        const downloads = payload.downloads || {};
+        let active = false;
+
+        Object.entries(downloads).forEach(([key, info]) => {
+          renderDownload(key, info);
+          if (["queued", "downloading", "extracting"].includes(info.status)) {
+            active = true;
+            sawActiveDownload = true;
+          }
+        });
+
+        if (!active) {
+          clearInterval(timer);
+          polling = false;
+          if (sawActiveDownload && Object.values(downloads).some((info) => info.status === "complete")) {
+            window.location.reload();
+          }
+        }
+      } catch (error) {
+        clearInterval(timer);
+        polling = false;
+      }
+    }, 2000);
+  }
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      button.classList.add("is-loading");
+      try {
+        await fetch(button.dataset.url, { method: "POST" });
+        button.classList.remove("is-loading");
+        sawActiveDownload = true;
+        pollStatus();
+      } catch (error) {
+        button.classList.remove("is-loading");
+        button.disabled = false;
+      }
+    });
+  });
+
+  pollStatus();
+})();
+</script>

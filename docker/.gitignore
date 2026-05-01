@@ -1,0 +1,13 @@
+# Runtime folders mounted by docker-compose.
+support_data/
+results/
+databases/
+uploads/
+
+# Large binary image distributed through Zenodo, not GitHub.
+phuegoweb-local.tar
+phuEGOweb-tester-package.tar
+
+# macOS metadata.
+.DS_Store
+._*

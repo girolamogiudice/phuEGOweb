@@ -1,0 +1,1736 @@
+.
+├── css
+│   └── no.css
+├── favicon.ico
+├── img
+│   ├── about.png
+│   ├── custom_phuEGO.png
+│   ├── logo.png
+│   ├── phuego.png
+│   ├── retrieve.png
+│   └── scphuEGO.png
+├── js
+│   ├── dist
+│   │   └── assets
+│   │       └── main-DkaB130o.js
+│   ├── enrichment.js
+│   ├── graphology.min.js
+│   ├── node_modules
+│   │   ├── @esbuild
+│   │   │   └── darwin-arm64
+│   │   │       ├── bin
+│   │   │       │   └── esbuild
+│   │   │       ├── package.json
+│   │   │       └── README.md
+│   │   ├── @rollup
+│   │   │   └── rollup-darwin-arm64
+│   │   │       ├── package.json
+│   │   │       ├── README.md
+│   │   │       └── rollup.darwin-arm64.node
+│   │   ├── @sigma
+│   │   │   └── layer-webgl
+│   │   │       ├── dist
+│   │   │       │   ├── declarations
+│   │   │       │   │   └── src
+│   │   │       │   │       ├── bind-webgl-layer.d.ts
+│   │   │       │   │       ├── contours
+│   │   │       │   │       │   ├── index.d.ts
+│   │   │       │   │       │   ├── shader-frag.d.ts
+│   │   │       │   │       │   └── types.d.ts
+│   │   │       │   │       ├── index.d.ts
+│   │   │       │   │       └── webgl-layer-program
+│   │   │       │   │           └── index.d.ts
+│   │   │       │   ├── sigma-layer-webgl.cjs.d.mts
+│   │   │       │   ├── sigma-layer-webgl.cjs.d.ts
+│   │   │       │   ├── sigma-layer-webgl.cjs.dev.js
+│   │   │       │   ├── sigma-layer-webgl.cjs.js
+│   │   │       │   ├── sigma-layer-webgl.cjs.mjs
+│   │   │       │   ├── sigma-layer-webgl.cjs.prod.js
+│   │   │       │   └── sigma-layer-webgl.esm.js
+│   │   │       ├── LICENSE.txt
+│   │   │       ├── package.json
+│   │   │       └── README.md
+│   │   ├── @types
+│   │   │   └── estree
+│   │   │       ├── flow.d.ts
+│   │   │       ├── index.d.ts
+│   │   │       ├── LICENSE
+│   │   │       ├── package.json
+│   │   │       └── README.md
+│   │   ├── commander
+│   │   │   ├── CHANGELOG.md
+│   │   │   ├── esm.mjs
+│   │   │   ├── index.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package-support.json
+│   │   │   ├── package.json
+│   │   │   ├── Readme.md
+│   │   │   └── typings
+│   │   │       └── index.d.ts
+│   │   ├── d3
+│   │   │   ├── dist
+│   │   │   │   ├── d3.js
+│   │   │   │   └── d3.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       └── index.js
+│   │   ├── d3-array
+│   │   │   ├── dist
+│   │   │   │   ├── d3-array.js
+│   │   │   │   └── d3-array.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── array.js
+│   │   │       ├── ascending.js
+│   │   │       ├── bin.js
+│   │   │       ├── bisect.js
+│   │   │       ├── bisector.js
+│   │   │       ├── blur.js
+│   │   │       ├── constant.js
+│   │   │       ├── count.js
+│   │   │       ├── cross.js
+│   │   │       ├── cumsum.js
+│   │   │       ├── descending.js
+│   │   │       ├── deviation.js
+│   │   │       ├── difference.js
+│   │   │       ├── disjoint.js
+│   │   │       ├── every.js
+│   │   │       ├── extent.js
+│   │   │       ├── filter.js
+│   │   │       ├── fsum.js
+│   │   │       ├── greatest.js
+│   │   │       ├── greatestIndex.js
+│   │   │       ├── group.js
+│   │   │       ├── groupSort.js
+│   │   │       ├── identity.js
+│   │   │       ├── index.js
+│   │   │       ├── intersection.js
+│   │   │       ├── least.js
+│   │   │       ├── leastIndex.js
+│   │   │       ├── map.js
+│   │   │       ├── max.js
+│   │   │       ├── maxIndex.js
+│   │   │       ├── mean.js
+│   │   │       ├── median.js
+│   │   │       ├── merge.js
+│   │   │       ├── min.js
+│   │   │       ├── minIndex.js
+│   │   │       ├── mode.js
+│   │   │       ├── nice.js
+│   │   │       ├── number.js
+│   │   │       ├── pairs.js
+│   │   │       ├── permute.js
+│   │   │       ├── quantile.js
+│   │   │       ├── quickselect.js
+│   │   │       ├── range.js
+│   │   │       ├── rank.js
+│   │   │       ├── reduce.js
+│   │   │       ├── reverse.js
+│   │   │       ├── scan.js
+│   │   │       ├── shuffle.js
+│   │   │       ├── some.js
+│   │   │       ├── sort.js
+│   │   │       ├── subset.js
+│   │   │       ├── sum.js
+│   │   │       ├── superset.js
+│   │   │       ├── threshold
+│   │   │       │   ├── freedmanDiaconis.js
+│   │   │       │   ├── scott.js
+│   │   │       │   └── sturges.js
+│   │   │       ├── ticks.js
+│   │   │       ├── transpose.js
+│   │   │       ├── union.js
+│   │   │       ├── variance.js
+│   │   │       └── zip.js
+│   │   ├── d3-axis
+│   │   │   ├── dist
+│   │   │   │   ├── d3-axis.js
+│   │   │   │   └── d3-axis.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── axis.js
+│   │   │       ├── identity.js
+│   │   │       └── index.js
+│   │   ├── d3-brush
+│   │   │   ├── dist
+│   │   │   │   ├── d3-brush.js
+│   │   │   │   └── d3-brush.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── brush.js
+│   │   │       ├── constant.js
+│   │   │       ├── event.js
+│   │   │       ├── index.js
+│   │   │       └── noevent.js
+│   │   ├── d3-chord
+│   │   │   ├── dist
+│   │   │   │   ├── d3-chord.js
+│   │   │   │   └── d3-chord.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── array.js
+│   │   │       ├── chord.js
+│   │   │       ├── constant.js
+│   │   │       ├── index.js
+│   │   │       ├── math.js
+│   │   │       └── ribbon.js
+│   │   ├── d3-color
+│   │   │   ├── dist
+│   │   │   │   ├── d3-color.js
+│   │   │   │   └── d3-color.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── color.js
+│   │   │       ├── cubehelix.js
+│   │   │       ├── define.js
+│   │   │       ├── index.js
+│   │   │       ├── lab.js
+│   │   │       └── math.js
+│   │   ├── d3-contour
+│   │   │   ├── dist
+│   │   │   │   ├── d3-contour.js
+│   │   │   │   └── d3-contour.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── area.js
+│   │   │       ├── array.js
+│   │   │       ├── ascending.js
+│   │   │       ├── constant.js
+│   │   │       ├── contains.js
+│   │   │       ├── contours.js
+│   │   │       ├── density.js
+│   │   │       ├── index.js
+│   │   │       └── noop.js
+│   │   ├── d3-delaunay
+│   │   │   ├── dist
+│   │   │   │   ├── d3-delaunay.js
+│   │   │   │   └── d3-delaunay.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── delaunay.js
+│   │   │       ├── index.js
+│   │   │       ├── path.js
+│   │   │       ├── polygon.js
+│   │   │       └── voronoi.js
+│   │   ├── d3-dispatch
+│   │   │   ├── dist
+│   │   │   │   ├── d3-dispatch.js
+│   │   │   │   └── d3-dispatch.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── dispatch.js
+│   │   │       └── index.js
+│   │   ├── d3-drag
+│   │   │   ├── dist
+│   │   │   │   ├── d3-drag.js
+│   │   │   │   └── d3-drag.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── constant.js
+│   │   │       ├── drag.js
+│   │   │       ├── event.js
+│   │   │       ├── index.js
+│   │   │       ├── nodrag.js
+│   │   │       └── noevent.js
+│   │   ├── d3-dsv
+│   │   │   ├── bin
+│   │   │   │   ├── dsv2dsv.js
+│   │   │   │   ├── dsv2json.js
+│   │   │   │   └── json2dsv.js
+│   │   │   ├── dist
+│   │   │   │   ├── d3-dsv.js
+│   │   │   │   └── d3-dsv.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── autoType.js
+│   │   │       ├── csv.js
+│   │   │       ├── dsv.js
+│   │   │       ├── index.js
+│   │   │       └── tsv.js
+│   │   ├── d3-ease
+│   │   │   ├── dist
+│   │   │   │   ├── d3-ease.js
+│   │   │   │   └── d3-ease.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── back.js
+│   │   │       ├── bounce.js
+│   │   │       ├── circle.js
+│   │   │       ├── cubic.js
+│   │   │       ├── elastic.js
+│   │   │       ├── exp.js
+│   │   │       ├── index.js
+│   │   │       ├── linear.js
+│   │   │       ├── math.js
+│   │   │       ├── poly.js
+│   │   │       ├── quad.js
+│   │   │       └── sin.js
+│   │   ├── d3-fetch
+│   │   │   ├── dist
+│   │   │   │   ├── d3-fetch.js
+│   │   │   │   └── d3-fetch.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── blob.js
+│   │   │       ├── buffer.js
+│   │   │       ├── dsv.js
+│   │   │       ├── image.js
+│   │   │       ├── index.js
+│   │   │       ├── json.js
+│   │   │       ├── text.js
+│   │   │       └── xml.js
+│   │   ├── d3-force
+│   │   │   ├── dist
+│   │   │   │   ├── d3-force.js
+│   │   │   │   └── d3-force.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── center.js
+│   │   │       ├── collide.js
+│   │   │       ├── constant.js
+│   │   │       ├── index.js
+│   │   │       ├── jiggle.js
+│   │   │       ├── lcg.js
+│   │   │       ├── link.js
+│   │   │       ├── manyBody.js
+│   │   │       ├── radial.js
+│   │   │       ├── simulation.js
+│   │   │       ├── x.js
+│   │   │       └── y.js
+│   │   ├── d3-format
+│   │   │   ├── dist
+│   │   │   │   ├── d3-format.js
+│   │   │   │   └── d3-format.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── locale
+│   │   │   │   ├── ar-001.json
+│   │   │   │   ├── ar-AE.json
+│   │   │   │   ├── ar-BH.json
+│   │   │   │   ├── ar-DJ.json
+│   │   │   │   ├── ar-DZ.json
+│   │   │   │   ├── ar-EG.json
+│   │   │   │   ├── ar-EH.json
+│   │   │   │   ├── ar-ER.json
+│   │   │   │   ├── ar-IL.json
+│   │   │   │   ├── ar-IQ.json
+│   │   │   │   ├── ar-JO.json
+│   │   │   │   ├── ar-KM.json
+│   │   │   │   ├── ar-KW.json
+│   │   │   │   ├── ar-LB.json
+│   │   │   │   ├── ar-LY.json
+│   │   │   │   ├── ar-MA.json
+│   │   │   │   ├── ar-MR.json
+│   │   │   │   ├── ar-OM.json
+│   │   │   │   ├── ar-PS.json
+│   │   │   │   ├── ar-QA.json
+│   │   │   │   ├── ar-SA.json
+│   │   │   │   ├── ar-SD.json
+│   │   │   │   ├── ar-SO.json
+│   │   │   │   ├── ar-SS.json
+│   │   │   │   ├── ar-SY.json
+│   │   │   │   ├── ar-TD.json
+│   │   │   │   ├── ar-TN.json
+│   │   │   │   ├── ar-YE.json
+│   │   │   │   ├── ca-ES.json
+│   │   │   │   ├── cs-CZ.json
+│   │   │   │   ├── da-DK.json
+│   │   │   │   ├── de-CH.json
+│   │   │   │   ├── de-DE.json
+│   │   │   │   ├── en-CA.json
+│   │   │   │   ├── en-GB.json
+│   │   │   │   ├── en-IE.json
+│   │   │   │   ├── en-IN.json
+│   │   │   │   ├── en-US.json
+│   │   │   │   ├── es-BO.json
+│   │   │   │   ├── es-ES.json
+│   │   │   │   ├── es-MX.json
+│   │   │   │   ├── fi-FI.json
+│   │   │   │   ├── fr-CA.json
+│   │   │   │   ├── fr-FR.json
+│   │   │   │   ├── he-IL.json
+│   │   │   │   ├── hu-HU.json
+│   │   │   │   ├── it-IT.json
+│   │   │   │   ├── ja-JP.json
+│   │   │   │   ├── ko-KR.json
+│   │   │   │   ├── mk-MK.json
+│   │   │   │   ├── nl-NL.json
+│   │   │   │   ├── pl-PL.json
+│   │   │   │   ├── pt-BR.json
+│   │   │   │   ├── pt-PT.json
+│   │   │   │   ├── ru-RU.json
+│   │   │   │   ├── sl-SI.json
+│   │   │   │   ├── sv-SE.json
+│   │   │   │   ├── uk-UA.json
+│   │   │   │   └── zh-CN.json
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── defaultLocale.js
+│   │   │       ├── exponent.js
+│   │   │       ├── formatDecimal.js
+│   │   │       ├── formatGroup.js
+│   │   │       ├── formatNumerals.js
+│   │   │       ├── formatPrefixAuto.js
+│   │   │       ├── formatRounded.js
+│   │   │       ├── formatSpecifier.js
+│   │   │       ├── formatTrim.js
+│   │   │       ├── formatTypes.js
+│   │   │       ├── identity.js
+│   │   │       ├── index.js
+│   │   │       ├── locale.js
+│   │   │       ├── precisionFixed.js
+│   │   │       ├── precisionPrefix.js
+│   │   │       └── precisionRound.js
+│   │   ├── d3-geo
+│   │   │   ├── dist
+│   │   │   │   ├── d3-geo.js
+│   │   │   │   └── d3-geo.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── area.js
+│   │   │       ├── bounds.js
+│   │   │       ├── cartesian.js
+│   │   │       ├── centroid.js
+│   │   │       ├── circle.js
+│   │   │       ├── clip
+│   │   │       │   ├── antimeridian.js
+│   │   │       │   ├── buffer.js
+│   │   │       │   ├── circle.js
+│   │   │       │   ├── extent.js
+│   │   │       │   ├── index.js
+│   │   │       │   ├── line.js
+│   │   │       │   ├── rectangle.js
+│   │   │       │   └── rejoin.js
+│   │   │       ├── compose.js
+│   │   │       ├── constant.js
+│   │   │       ├── contains.js
+│   │   │       ├── distance.js
+│   │   │       ├── graticule.js
+│   │   │       ├── identity.js
+│   │   │       ├── index.js
+│   │   │       ├── interpolate.js
+│   │   │       ├── length.js
+│   │   │       ├── math.js
+│   │   │       ├── noop.js
+│   │   │       ├── path
+│   │   │       │   ├── area.js
+│   │   │       │   ├── bounds.js
+│   │   │       │   ├── centroid.js
+│   │   │       │   ├── context.js
+│   │   │       │   ├── index.js
+│   │   │       │   ├── measure.js
+│   │   │       │   └── string.js
+│   │   │       ├── pointEqual.js
+│   │   │       ├── polygonContains.js
+│   │   │       ├── projection
+│   │   │       │   ├── albers.js
+│   │   │       │   ├── albersUsa.js
+│   │   │       │   ├── azimuthal.js
+│   │   │       │   ├── azimuthalEqualArea.js
+│   │   │       │   ├── azimuthalEquidistant.js
+│   │   │       │   ├── conic.js
+│   │   │       │   ├── conicConformal.js
+│   │   │       │   ├── conicEqualArea.js
+│   │   │       │   ├── conicEquidistant.js
+│   │   │       │   ├── cylindricalEqualArea.js
+│   │   │       │   ├── equalEarth.js
+│   │   │       │   ├── equirectangular.js
+│   │   │       │   ├── fit.js
+│   │   │       │   ├── gnomonic.js
+│   │   │       │   ├── identity.js
+│   │   │       │   ├── index.js
+│   │   │       │   ├── mercator.js
+│   │   │       │   ├── naturalEarth1.js
+│   │   │       │   ├── orthographic.js
+│   │   │       │   ├── resample.js
+│   │   │       │   ├── stereographic.js
+│   │   │       │   └── transverseMercator.js
+│   │   │       ├── rotation.js
+│   │   │       ├── stream.js
+│   │   │       └── transform.js
+│   │   ├── d3-hierarchy
+│   │   │   ├── dist
+│   │   │   │   ├── d3-hierarchy.js
+│   │   │   │   └── d3-hierarchy.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── accessors.js
+│   │   │       ├── array.js
+│   │   │       ├── cluster.js
+│   │   │       ├── constant.js
+│   │   │       ├── hierarchy
+│   │   │       │   ├── ancestors.js
+│   │   │       │   ├── count.js
+│   │   │       │   ├── descendants.js
+│   │   │       │   ├── each.js
+│   │   │       │   ├── eachAfter.js
+│   │   │       │   ├── eachBefore.js
+│   │   │       │   ├── find.js
+│   │   │       │   ├── index.js
+│   │   │       │   ├── iterator.js
+│   │   │       │   ├── leaves.js
+│   │   │       │   ├── links.js
+│   │   │       │   ├── path.js
+│   │   │       │   ├── sort.js
+│   │   │       │   └── sum.js
+│   │   │       ├── index.js
+│   │   │       ├── lcg.js
+│   │   │       ├── pack
+│   │   │       │   ├── enclose.js
+│   │   │       │   ├── index.js
+│   │   │       │   └── siblings.js
+│   │   │       ├── partition.js
+│   │   │       ├── stratify.js
+│   │   │       ├── tree.js
+│   │   │       └── treemap
+│   │   │           ├── binary.js
+│   │   │           ├── dice.js
+│   │   │           ├── index.js
+│   │   │           ├── resquarify.js
+│   │   │           ├── round.js
+│   │   │           ├── slice.js
+│   │   │           ├── sliceDice.js
+│   │   │           └── squarify.js
+│   │   ├── d3-interpolate
+│   │   │   ├── dist
+│   │   │   │   ├── d3-interpolate.js
+│   │   │   │   └── d3-interpolate.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── array.js
+│   │   │       ├── basis.js
+│   │   │       ├── basisClosed.js
+│   │   │       ├── color.js
+│   │   │       ├── constant.js
+│   │   │       ├── cubehelix.js
+│   │   │       ├── date.js
+│   │   │       ├── discrete.js
+│   │   │       ├── hcl.js
+│   │   │       ├── hsl.js
+│   │   │       ├── hue.js
+│   │   │       ├── index.js
+│   │   │       ├── lab.js
+│   │   │       ├── number.js
+│   │   │       ├── numberArray.js
+│   │   │       ├── object.js
+│   │   │       ├── piecewise.js
+│   │   │       ├── quantize.js
+│   │   │       ├── rgb.js
+│   │   │       ├── round.js
+│   │   │       ├── string.js
+│   │   │       ├── transform
+│   │   │       │   ├── decompose.js
+│   │   │       │   ├── index.js
+│   │   │       │   └── parse.js
+│   │   │       ├── value.js
+│   │   │       └── zoom.js
+│   │   ├── d3-path
+│   │   │   ├── dist
+│   │   │   │   ├── d3-path.js
+│   │   │   │   └── d3-path.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── index.js
+│   │   │       └── path.js
+│   │   ├── d3-polygon
+│   │   │   ├── dist
+│   │   │   │   ├── d3-polygon.js
+│   │   │   │   └── d3-polygon.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── area.js
+│   │   │       ├── centroid.js
+│   │   │       ├── contains.js
+│   │   │       ├── cross.js
+│   │   │       ├── hull.js
+│   │   │       ├── index.js
+│   │   │       └── length.js
+│   │   ├── d3-quadtree
+│   │   │   ├── dist
+│   │   │   │   ├── d3-quadtree.js
+│   │   │   │   └── d3-quadtree.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── add.js
+│   │   │       ├── cover.js
+│   │   │       ├── data.js
+│   │   │       ├── extent.js
+│   │   │       ├── find.js
+│   │   │       ├── index.js
+│   │   │       ├── quad.js
+│   │   │       ├── quadtree.js
+│   │   │       ├── remove.js
+│   │   │       ├── root.js
+│   │   │       ├── size.js
+│   │   │       ├── visit.js
+│   │   │       ├── visitAfter.js
+│   │   │       ├── x.js
+│   │   │       └── y.js
+│   │   ├── d3-random
+│   │   │   ├── dist
+│   │   │   │   ├── d3-random.js
+│   │   │   │   └── d3-random.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── bates.js
+│   │   │       ├── bernoulli.js
+│   │   │       ├── beta.js
+│   │   │       ├── binomial.js
+│   │   │       ├── cauchy.js
+│   │   │       ├── defaultSource.js
+│   │   │       ├── exponential.js
+│   │   │       ├── gamma.js
+│   │   │       ├── geometric.js
+│   │   │       ├── index.js
+│   │   │       ├── int.js
+│   │   │       ├── irwinHall.js
+│   │   │       ├── lcg.js
+│   │   │       ├── logistic.js
+│   │   │       ├── logNormal.js
+│   │   │       ├── normal.js
+│   │   │       ├── pareto.js
+│   │   │       ├── poisson.js
+│   │   │       ├── uniform.js
+│   │   │       └── weibull.js
+│   │   ├── d3-sankey
+│   │   │   ├── dist
+│   │   │   │   ├── d3-sankey.js
+│   │   │   │   └── d3-sankey.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── node_modules
+│   │   │   │   ├── d3-array
+│   │   │   │   │   ├── dist
+│   │   │   │   │   │   ├── d3-array.js
+│   │   │   │   │   │   └── d3-array.min.js
+│   │   │   │   │   ├── LICENSE
+│   │   │   │   │   ├── package.json
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── array.js
+│   │   │   │   │       ├── ascending.js
+│   │   │   │   │       ├── bin.js
+│   │   │   │   │       ├── bisect.js
+│   │   │   │   │       ├── bisector.js
+│   │   │   │   │       ├── constant.js
+│   │   │   │   │       ├── count.js
+│   │   │   │   │       ├── cross.js
+│   │   │   │   │       ├── cumsum.js
+│   │   │   │   │       ├── descending.js
+│   │   │   │   │       ├── deviation.js
+│   │   │   │   │       ├── difference.js
+│   │   │   │   │       ├── disjoint.js
+│   │   │   │   │       ├── every.js
+│   │   │   │   │       ├── extent.js
+│   │   │   │   │       ├── filter.js
+│   │   │   │   │       ├── fsum.js
+│   │   │   │   │       ├── greatest.js
+│   │   │   │   │       ├── greatestIndex.js
+│   │   │   │   │       ├── group.js
+│   │   │   │   │       ├── groupSort.js
+│   │   │   │   │       ├── identity.js
+│   │   │   │   │       ├── index.js
+│   │   │   │   │       ├── intersection.js
+│   │   │   │   │       ├── least.js
+│   │   │   │   │       ├── leastIndex.js
+│   │   │   │   │       ├── map.js
+│   │   │   │   │       ├── max.js
+│   │   │   │   │       ├── maxIndex.js
+│   │   │   │   │       ├── mean.js
+│   │   │   │   │       ├── median.js
+│   │   │   │   │       ├── merge.js
+│   │   │   │   │       ├── min.js
+│   │   │   │   │       ├── minIndex.js
+│   │   │   │   │       ├── nice.js
+│   │   │   │   │       ├── number.js
+│   │   │   │   │       ├── pairs.js
+│   │   │   │   │       ├── permute.js
+│   │   │   │   │       ├── quantile.js
+│   │   │   │   │       ├── quickselect.js
+│   │   │   │   │       ├── range.js
+│   │   │   │   │       ├── reduce.js
+│   │   │   │   │       ├── reverse.js
+│   │   │   │   │       ├── scan.js
+│   │   │   │   │       ├── set.js
+│   │   │   │   │       ├── shuffle.js
+│   │   │   │   │       ├── some.js
+│   │   │   │   │       ├── sort.js
+│   │   │   │   │       ├── subset.js
+│   │   │   │   │       ├── sum.js
+│   │   │   │   │       ├── superset.js
+│   │   │   │   │       ├── threshold
+│   │   │   │   │       │   ├── freedmanDiaconis.js
+│   │   │   │   │       │   ├── scott.js
+│   │   │   │   │       │   └── sturges.js
+│   │   │   │   │       ├── ticks.js
+│   │   │   │   │       ├── transpose.js
+│   │   │   │   │       ├── union.js
+│   │   │   │   │       ├── variance.js
+│   │   │   │   │       └── zip.js
+│   │   │   │   ├── d3-path
+│   │   │   │   │   ├── dist
+│   │   │   │   │   │   ├── d3-path.js
+│   │   │   │   │   │   └── d3-path.min.js
+│   │   │   │   │   ├── LICENSE
+│   │   │   │   │   ├── package.json
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── index.js
+│   │   │   │   │       └── path.js
+│   │   │   │   ├── d3-shape
+│   │   │   │   │   ├── dist
+│   │   │   │   │   │   ├── d3-shape.js
+│   │   │   │   │   │   └── d3-shape.min.js
+│   │   │   │   │   ├── LICENSE
+│   │   │   │   │   ├── package.json
+│   │   │   │   │   ├── README.md
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── arc.js
+│   │   │   │   │       ├── area.js
+│   │   │   │   │       ├── areaRadial.js
+│   │   │   │   │       ├── array.js
+│   │   │   │   │       ├── constant.js
+│   │   │   │   │       ├── curve
+│   │   │   │   │       │   ├── basis.js
+│   │   │   │   │       │   ├── basisClosed.js
+│   │   │   │   │       │   ├── basisOpen.js
+│   │   │   │   │       │   ├── bundle.js
+│   │   │   │   │       │   ├── cardinal.js
+│   │   │   │   │       │   ├── cardinalClosed.js
+│   │   │   │   │       │   ├── cardinalOpen.js
+│   │   │   │   │       │   ├── catmullRom.js
+│   │   │   │   │       │   ├── catmullRomClosed.js
+│   │   │   │   │       │   ├── catmullRomOpen.js
+│   │   │   │   │       │   ├── linear.js
+│   │   │   │   │       │   ├── linearClosed.js
+│   │   │   │   │       │   ├── monotone.js
+│   │   │   │   │       │   ├── natural.js
+│   │   │   │   │       │   ├── radial.js
+│   │   │   │   │       │   └── step.js
+│   │   │   │   │       ├── descending.js
+│   │   │   │   │       ├── identity.js
+│   │   │   │   │       ├── index.js
+│   │   │   │   │       ├── line.js
+│   │   │   │   │       ├── lineRadial.js
+│   │   │   │   │       ├── link
+│   │   │   │   │       │   └── index.js
+│   │   │   │   │       ├── math.js
+│   │   │   │   │       ├── noop.js
+│   │   │   │   │       ├── offset
+│   │   │   │   │       │   ├── diverging.js
+│   │   │   │   │       │   ├── expand.js
+│   │   │   │   │       │   ├── none.js
+│   │   │   │   │       │   ├── silhouette.js
+│   │   │   │   │       │   └── wiggle.js
+│   │   │   │   │       ├── order
+│   │   │   │   │       │   ├── appearance.js
+│   │   │   │   │       │   ├── ascending.js
+│   │   │   │   │       │   ├── descending.js
+│   │   │   │   │       │   ├── insideOut.js
+│   │   │   │   │       │   ├── none.js
+│   │   │   │   │       │   └── reverse.js
+│   │   │   │   │       ├── pie.js
+│   │   │   │   │       ├── point.js
+│   │   │   │   │       ├── pointRadial.js
+│   │   │   │   │       ├── stack.js
+│   │   │   │   │       ├── symbol
+│   │   │   │   │       │   ├── circle.js
+│   │   │   │   │       │   ├── cross.js
+│   │   │   │   │       │   ├── diamond.js
+│   │   │   │   │       │   ├── square.js
+│   │   │   │   │       │   ├── star.js
+│   │   │   │   │       │   ├── triangle.js
+│   │   │   │   │       │   └── wye.js
+│   │   │   │   │       └── symbol.js
+│   │   │   │   └── internmap
+│   │   │   │       ├── dist
+│   │   │   │       │   ├── internmap.js
+│   │   │   │       │   └── internmap.min.js
+│   │   │   │       ├── LICENSE
+│   │   │   │       ├── package.json
+│   │   │   │       ├── README.md
+│   │   │   │       └── src
+│   │   │   │           └── index.js
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── align.js
+│   │   │       ├── constant.js
+│   │   │       ├── index.js
+│   │   │       ├── sankey.js
+│   │   │       └── sankeyLinkHorizontal.js
+│   │   ├── d3-scale
+│   │   │   ├── dist
+│   │   │   │   ├── d3-scale.js
+│   │   │   │   └── d3-scale.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── band.js
+│   │   │       ├── colors.js
+│   │   │       ├── constant.js
+│   │   │       ├── continuous.js
+│   │   │       ├── diverging.js
+│   │   │       ├── identity.js
+│   │   │       ├── index.js
+│   │   │       ├── init.js
+│   │   │       ├── linear.js
+│   │   │       ├── log.js
+│   │   │       ├── nice.js
+│   │   │       ├── number.js
+│   │   │       ├── ordinal.js
+│   │   │       ├── pow.js
+│   │   │       ├── quantile.js
+│   │   │       ├── quantize.js
+│   │   │       ├── radial.js
+│   │   │       ├── sequential.js
+│   │   │       ├── sequentialQuantile.js
+│   │   │       ├── symlog.js
+│   │   │       ├── threshold.js
+│   │   │       ├── tickFormat.js
+│   │   │       ├── time.js
+│   │   │       └── utcTime.js
+│   │   ├── d3-scale-chromatic
+│   │   │   ├── dist
+│   │   │   │   ├── d3-scale-chromatic.js
+│   │   │   │   └── d3-scale-chromatic.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── categorical
+│   │   │       │   ├── Accent.js
+│   │   │       │   ├── category10.js
+│   │   │       │   ├── Dark2.js
+│   │   │       │   ├── observable10.js
+│   │   │       │   ├── Paired.js
+│   │   │       │   ├── Pastel1.js
+│   │   │       │   ├── Pastel2.js
+│   │   │       │   ├── Set1.js
+│   │   │       │   ├── Set2.js
+│   │   │       │   ├── Set3.js
+│   │   │       │   └── Tableau10.js
+│   │   │       ├── colors.js
+│   │   │       ├── diverging
+│   │   │       │   ├── BrBG.js
+│   │   │       │   ├── PiYG.js
+│   │   │       │   ├── PRGn.js
+│   │   │       │   ├── PuOr.js
+│   │   │       │   ├── RdBu.js
+│   │   │       │   ├── RdGy.js
+│   │   │       │   ├── RdYlBu.js
+│   │   │       │   ├── RdYlGn.js
+│   │   │       │   └── Spectral.js
+│   │   │       ├── index.js
+│   │   │       ├── ramp.js
+│   │   │       ├── rampClosed.js
+│   │   │       ├── sequential-multi
+│   │   │       │   ├── BuGn.js
+│   │   │       │   ├── BuPu.js
+│   │   │       │   ├── cividis.js
+│   │   │       │   ├── cubehelix.js
+│   │   │       │   ├── GnBu.js
+│   │   │       │   ├── OrRd.js
+│   │   │       │   ├── PuBu.js
+│   │   │       │   ├── PuBuGn.js
+│   │   │       │   ├── PuRd.js
+│   │   │       │   ├── rainbow.js
+│   │   │       │   ├── RdPu.js
+│   │   │       │   ├── sinebow.js
+│   │   │       │   ├── turbo.js
+│   │   │       │   ├── viridis.js
+│   │   │       │   ├── YlGn.js
+│   │   │       │   ├── YlGnBu.js
+│   │   │       │   ├── YlOrBr.js
+│   │   │       │   └── YlOrRd.js
+│   │   │       └── sequential-single
+│   │   │           ├── Blues.js
+│   │   │           ├── Greens.js
+│   │   │           ├── Greys.js
+│   │   │           ├── Oranges.js
+│   │   │           ├── Purples.js
+│   │   │           └── Reds.js
+│   │   ├── d3-selection
+│   │   │   ├── dist
+│   │   │   │   ├── d3-selection.js
+│   │   │   │   └── d3-selection.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── array.js
+│   │   │       ├── constant.js
+│   │   │       ├── create.js
+│   │   │       ├── creator.js
+│   │   │       ├── identity.js
+│   │   │       ├── index.js
+│   │   │       ├── local.js
+│   │   │       ├── matcher.js
+│   │   │       ├── namespace.js
+│   │   │       ├── namespaces.js
+│   │   │       ├── pointer.js
+│   │   │       ├── pointers.js
+│   │   │       ├── select.js
+│   │   │       ├── selectAll.js
+│   │   │       ├── selection
+│   │   │       │   ├── append.js
+│   │   │       │   ├── attr.js
+│   │   │       │   ├── call.js
+│   │   │       │   ├── classed.js
+│   │   │       │   ├── clone.js
+│   │   │       │   ├── data.js
+│   │   │       │   ├── datum.js
+│   │   │       │   ├── dispatch.js
+│   │   │       │   ├── each.js
+│   │   │       │   ├── empty.js
+│   │   │       │   ├── enter.js
+│   │   │       │   ├── exit.js
+│   │   │       │   ├── filter.js
+│   │   │       │   ├── html.js
+│   │   │       │   ├── index.js
+│   │   │       │   ├── insert.js
+│   │   │       │   ├── iterator.js
+│   │   │       │   ├── join.js
+│   │   │       │   ├── lower.js
+│   │   │       │   ├── merge.js
+│   │   │       │   ├── node.js
+│   │   │       │   ├── nodes.js
+│   │   │       │   ├── on.js
+│   │   │       │   ├── order.js
+│   │   │       │   ├── property.js
+│   │   │       │   ├── raise.js
+│   │   │       │   ├── remove.js
+│   │   │       │   ├── select.js
+│   │   │       │   ├── selectAll.js
+│   │   │       │   ├── selectChild.js
+│   │   │       │   ├── selectChildren.js
+│   │   │       │   ├── size.js
+│   │   │       │   ├── sort.js
+│   │   │       │   ├── sparse.js
+│   │   │       │   ├── style.js
+│   │   │       │   └── text.js
+│   │   │       ├── selector.js
+│   │   │       ├── selectorAll.js
+│   │   │       ├── sourceEvent.js
+│   │   │       └── window.js
+│   │   ├── d3-shape
+│   │   │   ├── dist
+│   │   │   │   ├── d3-shape.js
+│   │   │   │   └── d3-shape.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── arc.js
+│   │   │       ├── area.js
+│   │   │       ├── areaRadial.js
+│   │   │       ├── array.js
+│   │   │       ├── constant.js
+│   │   │       ├── curve
+│   │   │       │   ├── basis.js
+│   │   │       │   ├── basisClosed.js
+│   │   │       │   ├── basisOpen.js
+│   │   │       │   ├── bump.js
+│   │   │       │   ├── bundle.js
+│   │   │       │   ├── cardinal.js
+│   │   │       │   ├── cardinalClosed.js
+│   │   │       │   ├── cardinalOpen.js
+│   │   │       │   ├── catmullRom.js
+│   │   │       │   ├── catmullRomClosed.js
+│   │   │       │   ├── catmullRomOpen.js
+│   │   │       │   ├── linear.js
+│   │   │       │   ├── linearClosed.js
+│   │   │       │   ├── monotone.js
+│   │   │       │   ├── natural.js
+│   │   │       │   ├── radial.js
+│   │   │       │   └── step.js
+│   │   │       ├── descending.js
+│   │   │       ├── identity.js
+│   │   │       ├── index.js
+│   │   │       ├── line.js
+│   │   │       ├── lineRadial.js
+│   │   │       ├── link.js
+│   │   │       ├── math.js
+│   │   │       ├── noop.js
+│   │   │       ├── offset
+│   │   │       │   ├── diverging.js
+│   │   │       │   ├── expand.js
+│   │   │       │   ├── none.js
+│   │   │       │   ├── silhouette.js
+│   │   │       │   └── wiggle.js
+│   │   │       ├── order
+│   │   │       │   ├── appearance.js
+│   │   │       │   ├── ascending.js
+│   │   │       │   ├── descending.js
+│   │   │       │   ├── insideOut.js
+│   │   │       │   ├── none.js
+│   │   │       │   └── reverse.js
+│   │   │       ├── path.js
+│   │   │       ├── pie.js
+│   │   │       ├── point.js
+│   │   │       ├── pointRadial.js
+│   │   │       ├── stack.js
+│   │   │       ├── symbol
+│   │   │       │   ├── asterisk.js
+│   │   │       │   ├── circle.js
+│   │   │       │   ├── cross.js
+│   │   │       │   ├── diamond.js
+│   │   │       │   ├── diamond2.js
+│   │   │       │   ├── plus.js
+│   │   │       │   ├── square.js
+│   │   │       │   ├── square2.js
+│   │   │       │   ├── star.js
+│   │   │       │   ├── times.js
+│   │   │       │   ├── triangle.js
+│   │   │       │   ├── triangle2.js
+│   │   │       │   └── wye.js
+│   │   │       └── symbol.js
+│   │   ├── d3-time
+│   │   │   ├── dist
+│   │   │   │   ├── d3-time.js
+│   │   │   │   └── d3-time.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── day.js
+│   │   │       ├── duration.js
+│   │   │       ├── hour.js
+│   │   │       ├── index.js
+│   │   │       ├── interval.js
+│   │   │       ├── millisecond.js
+│   │   │       ├── minute.js
+│   │   │       ├── month.js
+│   │   │       ├── second.js
+│   │   │       ├── ticks.js
+│   │   │       ├── week.js
+│   │   │       └── year.js
+│   │   ├── d3-time-format
+│   │   │   ├── dist
+│   │   │   │   ├── d3-time-format.js
+│   │   │   │   └── d3-time-format.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── locale
+│   │   │   │   ├── ar-EG.json
+│   │   │   │   ├── ar-SY.json
+│   │   │   │   ├── ca-ES.json
+│   │   │   │   ├── cs-CZ.json
+│   │   │   │   ├── da-DK.json
+│   │   │   │   ├── de-CH.json
+│   │   │   │   ├── de-DE.json
+│   │   │   │   ├── en-CA.json
+│   │   │   │   ├── en-GB.json
+│   │   │   │   ├── en-US.json
+│   │   │   │   ├── es-ES.json
+│   │   │   │   ├── es-MX.json
+│   │   │   │   ├── fa-IR.json
+│   │   │   │   ├── fi-FI.json
+│   │   │   │   ├── fr-CA.json
+│   │   │   │   ├── fr-FR.json
+│   │   │   │   ├── he-IL.json
+│   │   │   │   ├── hr-HR.json
+│   │   │   │   ├── hu-HU.json
+│   │   │   │   ├── it-IT.json
+│   │   │   │   ├── ja-JP.json
+│   │   │   │   ├── ko-KR.json
+│   │   │   │   ├── mk-MK.json
+│   │   │   │   ├── nb-NO.json
+│   │   │   │   ├── nl-BE.json
+│   │   │   │   ├── nl-NL.json
+│   │   │   │   ├── pl-PL.json
+│   │   │   │   ├── pt-BR.json
+│   │   │   │   ├── ru-RU.json
+│   │   │   │   ├── sv-SE.json
+│   │   │   │   ├── tr-TR.json
+│   │   │   │   ├── uk-UA.json
+│   │   │   │   ├── zh-CN.json
+│   │   │   │   └── zh-TW.json
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── defaultLocale.js
+│   │   │       ├── index.js
+│   │   │       ├── isoFormat.js
+│   │   │       ├── isoParse.js
+│   │   │       └── locale.js
+│   │   ├── d3-timer
+│   │   │   ├── dist
+│   │   │   │   ├── d3-timer.js
+│   │   │   │   └── d3-timer.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── index.js
+│   │   │       ├── interval.js
+│   │   │       ├── timeout.js
+│   │   │       └── timer.js
+│   │   ├── d3-transition
+│   │   │   ├── dist
+│   │   │   │   ├── d3-transition.js
+│   │   │   │   └── d3-transition.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── active.js
+│   │   │       ├── index.js
+│   │   │       ├── interrupt.js
+│   │   │       ├── selection
+│   │   │       │   ├── index.js
+│   │   │       │   ├── interrupt.js
+│   │   │       │   └── transition.js
+│   │   │       └── transition
+│   │   │           ├── attr.js
+│   │   │           ├── attrTween.js
+│   │   │           ├── delay.js
+│   │   │           ├── duration.js
+│   │   │           ├── ease.js
+│   │   │           ├── easeVarying.js
+│   │   │           ├── end.js
+│   │   │           ├── filter.js
+│   │   │           ├── index.js
+│   │   │           ├── interpolate.js
+│   │   │           ├── merge.js
+│   │   │           ├── on.js
+│   │   │           ├── remove.js
+│   │   │           ├── schedule.js
+│   │   │           ├── select.js
+│   │   │           ├── selectAll.js
+│   │   │           ├── selection.js
+│   │   │           ├── style.js
+│   │   │           ├── styleTween.js
+│   │   │           ├── text.js
+│   │   │           ├── textTween.js
+│   │   │           ├── transition.js
+│   │   │           └── tween.js
+│   │   ├── d3-zoom
+│   │   │   ├── dist
+│   │   │   │   ├── d3-zoom.js
+│   │   │   │   └── d3-zoom.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       ├── constant.js
+│   │   │       ├── event.js
+│   │   │       ├── index.js
+│   │   │       ├── noevent.js
+│   │   │       ├── transform.js
+│   │   │       └── zoom.js
+│   │   ├── delaunator
+│   │   │   ├── delaunator.js
+│   │   │   ├── delaunator.min.js
+│   │   │   ├── index.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── esbuild
+│   │   │   ├── bin
+│   │   │   │   └── esbuild
+│   │   │   ├── install.js
+│   │   │   ├── lib
+│   │   │   │   ├── main.d.ts
+│   │   │   │   └── main.js
+│   │   │   ├── LICENSE.md
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── events
+│   │   │   ├── events.js
+│   │   │   ├── History.md
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── Readme.md
+│   │   │   ├── security.md
+│   │   │   └── tests
+│   │   │       ├── add-listeners.js
+│   │   │       ├── check-listener-leaks.js
+│   │   │       ├── common.js
+│   │   │       ├── errors.js
+│   │   │       ├── events-list.js
+│   │   │       ├── events-once.js
+│   │   │       ├── index.js
+│   │   │       ├── legacy-compat.js
+│   │   │       ├── listener-count.js
+│   │   │       ├── listeners-side-effects.js
+│   │   │       ├── listeners.js
+│   │   │       ├── max-listeners.js
+│   │   │       ├── method-names.js
+│   │   │       ├── modify-in-emit.js
+│   │   │       ├── num-args.js
+│   │   │       ├── once.js
+│   │   │       ├── prepend.js
+│   │   │       ├── remove-all-listeners.js
+│   │   │       ├── remove-listeners.js
+│   │   │       ├── set-max-listeners-side-effects.js
+│   │   │       ├── special-event-names.js
+│   │   │       ├── subclass.js
+│   │   │       └── symbols.js
+│   │   ├── fsevents
+│   │   │   ├── fsevents.d.ts
+│   │   │   ├── fsevents.js
+│   │   │   ├── fsevents.node
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── graphology
+│   │   │   ├── dist
+│   │   │   │   ├── graphology.cjs.js
+│   │   │   │   ├── graphology.cjs.js.map
+│   │   │   │   ├── graphology.d.ts
+│   │   │   │   ├── graphology.esm.js
+│   │   │   │   ├── graphology.esm.js.map
+│   │   │   │   ├── graphology.mjs
+│   │   │   │   ├── graphology.mjs.map
+│   │   │   │   ├── graphology.umd.js
+│   │   │   │   ├── graphology.umd.js.map
+│   │   │   │   ├── graphology.umd.min.js
+│   │   │   │   └── graphology.umd.min.js.map
+│   │   │   ├── LICENSE.txt
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── specs
+│   │   │       ├── attributes.js
+│   │   │       ├── events.js
+│   │   │       ├── helpers.js
+│   │   │       ├── index.js
+│   │   │       ├── instantiation.js
+│   │   │       ├── iteration
+│   │   │       │   ├── edges.js
+│   │   │       │   ├── index.js
+│   │   │       │   ├── neighbors.js
+│   │   │       │   └── nodes.js
+│   │   │       ├── known.js
+│   │   │       ├── misc.js
+│   │   │       ├── mutation.js
+│   │   │       ├── properties.js
+│   │   │       ├── read.js
+│   │   │       ├── serialization.js
+│   │   │       └── utils.js
+│   │   ├── graphology-layout-forceatlas2
+│   │   │   ├── defaults.js
+│   │   │   ├── helpers.js
+│   │   │   ├── index.d.ts
+│   │   │   ├── index.js
+│   │   │   ├── iterate.js
+│   │   │   ├── LICENSE.txt
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   ├── webworker.js
+│   │   │   ├── worker.d.ts
+│   │   │   └── worker.js
+│   │   ├── graphology-types
+│   │   │   ├── index.d.ts
+│   │   │   ├── LICENSE.txt
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── graphology-utils
+│   │   │   ├── add-edge.d.ts
+│   │   │   ├── add-edge.js
+│   │   │   ├── add-node.d.ts
+│   │   │   ├── add-node.js
+│   │   │   ├── defaults.d.ts
+│   │   │   ├── defaults.js
+│   │   │   ├── getters.d.ts
+│   │   │   ├── getters.js
+│   │   │   ├── index.d.ts
+│   │   │   ├── index.js
+│   │   │   ├── infer-multi.d.ts
+│   │   │   ├── infer-multi.js
+│   │   │   ├── infer-type.d.ts
+│   │   │   ├── infer-type.js
+│   │   │   ├── is-graph-constructor.d.ts
+│   │   │   ├── is-graph-constructor.js
+│   │   │   ├── is-graph.d.ts
+│   │   │   ├── is-graph.js
+│   │   │   ├── LICENSE.txt
+│   │   │   ├── merge-clique.d.ts
+│   │   │   ├── merge-clique.js
+│   │   │   ├── merge-cycle.d.ts
+│   │   │   ├── merge-cycle.js
+│   │   │   ├── merge-path.d.ts
+│   │   │   ├── merge-path.js
+│   │   │   ├── merge-star.d.ts
+│   │   │   ├── merge-star.js
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   ├── rename-graph-keys.d.ts
+│   │   │   ├── rename-graph-keys.js
+│   │   │   ├── update-graph-keys.d.ts
+│   │   │   └── update-graph-keys.js
+│   │   ├── iconv-lite
+│   │   │   ├── Changelog.md
+│   │   │   ├── encodings
+│   │   │   │   ├── dbcs-codec.js
+│   │   │   │   ├── dbcs-data.js
+│   │   │   │   ├── index.js
+│   │   │   │   ├── internal.js
+│   │   │   │   ├── sbcs-codec.js
+│   │   │   │   ├── sbcs-data-generated.js
+│   │   │   │   ├── sbcs-data.js
+│   │   │   │   ├── tables
+│   │   │   │   │   ├── big5-added.json
+│   │   │   │   │   ├── cp936.json
+│   │   │   │   │   ├── cp949.json
+│   │   │   │   │   ├── cp950.json
+│   │   │   │   │   ├── eucjp.json
+│   │   │   │   │   ├── gb18030-ranges.json
+│   │   │   │   │   ├── gbk-added.json
+│   │   │   │   │   └── shiftjis.json
+│   │   │   │   ├── utf16.js
+│   │   │   │   ├── utf32.js
+│   │   │   │   └── utf7.js
+│   │   │   ├── lib
+│   │   │   │   ├── bom-handling.js
+│   │   │   │   ├── index.d.ts
+│   │   │   │   ├── index.js
+│   │   │   │   └── streams.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── internmap
+│   │   │   ├── dist
+│   │   │   │   ├── internmap.js
+│   │   │   │   └── internmap.min.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── src
+│   │   │       └── index.js
+│   │   ├── nanoid
+│   │   │   ├── async
+│   │   │   │   ├── index.browser.cjs
+│   │   │   │   ├── index.browser.js
+│   │   │   │   ├── index.cjs
+│   │   │   │   ├── index.d.ts
+│   │   │   │   ├── index.js
+│   │   │   │   ├── index.native.js
+│   │   │   │   └── package.json
+│   │   │   ├── bin
+│   │   │   │   └── nanoid.cjs
+│   │   │   ├── index.browser.cjs
+│   │   │   ├── index.browser.js
+│   │   │   ├── index.cjs
+│   │   │   ├── index.d.cts
+│   │   │   ├── index.d.ts
+│   │   │   ├── index.js
+│   │   │   ├── LICENSE
+│   │   │   ├── nanoid.js
+│   │   │   ├── non-secure
+│   │   │   │   ├── index.cjs
+│   │   │   │   ├── index.d.ts
+│   │   │   │   ├── index.js
+│   │   │   │   └── package.json
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── url-alphabet
+│   │   │       ├── index.cjs
+│   │   │       ├── index.js
+│   │   │       └── package.json
+│   │   ├── picocolors
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── picocolors.browser.js
+│   │   │   ├── picocolors.d.ts
+│   │   │   ├── picocolors.js
+│   │   │   ├── README.md
+│   │   │   └── types.d.ts
+│   │   ├── postcss
+│   │   │   ├── lib
+│   │   │   │   ├── at-rule.d.ts
+│   │   │   │   ├── at-rule.js
+│   │   │   │   ├── comment.d.ts
+│   │   │   │   ├── comment.js
+│   │   │   │   ├── container.d.ts
+│   │   │   │   ├── container.js
+│   │   │   │   ├── css-syntax-error.d.ts
+│   │   │   │   ├── css-syntax-error.js
+│   │   │   │   ├── declaration.d.ts
+│   │   │   │   ├── declaration.js
+│   │   │   │   ├── document.d.ts
+│   │   │   │   ├── document.js
+│   │   │   │   ├── fromJSON.d.ts
+│   │   │   │   ├── fromJSON.js
+│   │   │   │   ├── input.d.ts
+│   │   │   │   ├── input.js
+│   │   │   │   ├── lazy-result.d.ts
+│   │   │   │   ├── lazy-result.js
+│   │   │   │   ├── list.d.ts
+│   │   │   │   ├── list.js
+│   │   │   │   ├── map-generator.js
+│   │   │   │   ├── no-work-result.d.ts
+│   │   │   │   ├── no-work-result.js
+│   │   │   │   ├── node.d.ts
+│   │   │   │   ├── node.js
+│   │   │   │   ├── parse.d.ts
+│   │   │   │   ├── parse.js
+│   │   │   │   ├── parser.js
+│   │   │   │   ├── postcss.d.mts
+│   │   │   │   ├── postcss.d.ts
+│   │   │   │   ├── postcss.js
+│   │   │   │   ├── postcss.mjs
+│   │   │   │   ├── previous-map.d.ts
+│   │   │   │   ├── previous-map.js
+│   │   │   │   ├── processor.d.ts
+│   │   │   │   ├── processor.js
+│   │   │   │   ├── result.d.ts
+│   │   │   │   ├── result.js
+│   │   │   │   ├── root.d.ts
+│   │   │   │   ├── root.js
+│   │   │   │   ├── rule.d.ts
+│   │   │   │   ├── rule.js
+│   │   │   │   ├── stringifier.d.ts
+│   │   │   │   ├── stringifier.js
+│   │   │   │   ├── stringify.d.ts
+│   │   │   │   ├── stringify.js
+│   │   │   │   ├── symbols.js
+│   │   │   │   ├── terminal-highlight.js
+│   │   │   │   ├── tokenize.js
+│   │   │   │   ├── warn-once.js
+│   │   │   │   ├── warning.d.ts
+│   │   │   │   └── warning.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── robust-predicates
+│   │   │   ├── esm
+│   │   │   │   ├── incircle.js
+│   │   │   │   ├── insphere.js
+│   │   │   │   ├── orient2d.js
+│   │   │   │   ├── orient3d.js
+│   │   │   │   └── util.js
+│   │   │   ├── index.d.ts
+│   │   │   ├── index.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── umd
+│   │   │       ├── incircle.js
+│   │   │       ├── incircle.min.js
+│   │   │       ├── insphere.js
+│   │   │       ├── insphere.min.js
+│   │   │       ├── orient2d.js
+│   │   │       ├── orient2d.min.js
+│   │   │       ├── orient3d.js
+│   │   │       ├── orient3d.min.js
+│   │   │       ├── predicates.js
+│   │   │       └── predicates.min.js
+│   │   ├── rollup
+│   │   │   ├── dist
+│   │   │   │   ├── bin
+│   │   │   │   │   └── rollup
+│   │   │   │   ├── es
+│   │   │   │   │   ├── getLogFilter.js
+│   │   │   │   │   ├── package.json
+│   │   │   │   │   ├── parseAst.js
+│   │   │   │   │   ├── rollup.js
+│   │   │   │   │   └── shared
+│   │   │   │   │       ├── node-entry.js
+│   │   │   │   │       ├── parseAst.js
+│   │   │   │   │       └── watch.js
+│   │   │   │   ├── getLogFilter.d.ts
+│   │   │   │   ├── getLogFilter.js
+│   │   │   │   ├── loadConfigFile.d.ts
+│   │   │   │   ├── loadConfigFile.js
+│   │   │   │   ├── native.js
+│   │   │   │   ├── parseAst.d.ts
+│   │   │   │   ├── parseAst.js
+│   │   │   │   ├── rollup.d.ts
+│   │   │   │   ├── rollup.js
+│   │   │   │   └── shared
+│   │   │   │       ├── fsevents-importer.js
+│   │   │   │       ├── index.js
+│   │   │   │       ├── loadConfigFile.js
+│   │   │   │       ├── parseAst.js
+│   │   │   │       ├── rollup.js
+│   │   │   │       ├── watch-cli.js
+│   │   │   │       └── watch.js
+│   │   │   ├── LICENSE.md
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   ├── rw
+│   │   │   ├── index.js
+│   │   │   ├── lib
+│   │   │   │   └── rw
+│   │   │   │       ├── dash.js
+│   │   │   │       ├── decode.js
+│   │   │   │       ├── encode.js
+│   │   │   │       ├── read-file-sync.js
+│   │   │   │       ├── read-file.js
+│   │   │   │       ├── write-file-sync.js
+│   │   │   │       └── write-file.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   └── test
+│   │   │       ├── cat-async
+│   │   │       ├── cat-sync
+│   │   │       ├── encode-object-async
+│   │   │       ├── encode-object-sync
+│   │   │       ├── encode-string-async
+│   │   │       ├── encode-string-sync
+│   │   │       ├── encoding-async
+│   │   │       ├── encoding-sync
+│   │   │       ├── run-tests
+│   │   │       ├── utf8.txt
+│   │   │       ├── wc-async
+│   │   │       ├── wc-sync
+│   │   │       ├── write-async
+│   │   │       └── write-sync
+│   │   ├── safer-buffer
+│   │   │   ├── dangerous.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── Porting-Buffer.md
+│   │   │   ├── Readme.md
+│   │   │   ├── safer.js
+│   │   │   └── tests.js
+│   │   ├── sigma
+│   │   │   ├── dist
+│   │   │   │   ├── colors-beb06eb2.esm.js
+│   │   │   │   ├── colors-ee2e2828.cjs.prod.js
+│   │   │   │   ├── colors-fe6de9d2.cjs.dev.js
+│   │   │   │   ├── data-11df7124.esm.js
+│   │   │   │   ├── data-24ae515b.cjs.dev.js
+│   │   │   │   ├── data-881001cd.cjs.prod.js
+│   │   │   │   ├── declarations
+│   │   │   │   │   └── src
+│   │   │   │   │       ├── core
+│   │   │   │   │       │   ├── camera.d.ts
+│   │   │   │   │       │   └── captors
+│   │   │   │   │       │       ├── captor.d.ts
+│   │   │   │   │       │       ├── mouse.d.ts
+│   │   │   │   │       │       └── touch.d.ts
+│   │   │   │   │       ├── index.d.ts
+│   │   │   │   │       ├── rendering
+│   │   │   │   │       │   ├── edge-labels.d.ts
+│   │   │   │   │       │   ├── edge.d.ts
+│   │   │   │   │       │   ├── index.d.ts
+│   │   │   │   │       │   ├── node-hover.d.ts
+│   │   │   │   │       │   ├── node-labels.d.ts
+│   │   │   │   │       │   ├── node.d.ts
+│   │   │   │   │       │   ├── program.d.ts
+│   │   │   │   │       │   ├── programs
+│   │   │   │   │       │   │   ├── edge-arrow
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-arrow-head
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-clamped
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-double-arrow
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-double-clamped
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-line
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-rectangle
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── edge-triangle
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   ├── node-circle
+│   │   │   │   │       │   │   │   └── index.d.ts
+│   │   │   │   │       │   │   └── node-point
+│   │   │   │   │       │   │       └── index.d.ts
+│   │   │   │   │       │   └── utils.d.ts
+│   │   │   │   │       ├── settings.d.ts
+│   │   │   │   │       ├── sigma.d.ts
+│   │   │   │   │       ├── types.d.ts
+│   │   │   │   │       └── utils
+│   │   │   │   │           ├── animate.d.ts
+│   │   │   │   │           ├── colors.d.ts
+│   │   │   │   │           ├── coordinates.d.ts
+│   │   │   │   │           ├── data.d.ts
+│   │   │   │   │           ├── easings.d.ts
+│   │   │   │   │           ├── graph.d.ts
+│   │   │   │   │           ├── index.d.ts
+│   │   │   │   │           ├── matrices.d.ts
+│   │   │   │   │           ├── misc.d.ts
+│   │   │   │   │           └── normalization.d.ts
+│   │   │   │   ├── index-16136237.cjs.prod.js
+│   │   │   │   ├── index-236c62ad.esm.js
+│   │   │   │   ├── index-88310d0d.cjs.dev.js
+│   │   │   │   ├── inherits-04acba6b.cjs.dev.js
+│   │   │   │   ├── inherits-6434e089.cjs.prod.js
+│   │   │   │   ├── inherits-d1a1e29b.esm.js
+│   │   │   │   ├── normalization-02a974d4.cjs.dev.js
+│   │   │   │   ├── normalization-aed467cc.cjs.prod.js
+│   │   │   │   ├── normalization-be445518.esm.js
+│   │   │   │   ├── sigma.cjs.d.mts
+│   │   │   │   ├── sigma.cjs.d.ts
+│   │   │   │   ├── sigma.cjs.default.d.ts
+│   │   │   │   ├── sigma.cjs.default.js
+│   │   │   │   ├── sigma.cjs.dev.js
+│   │   │   │   ├── sigma.cjs.js
+│   │   │   │   ├── sigma.cjs.mjs
+│   │   │   │   ├── sigma.cjs.prod.js
+│   │   │   │   ├── sigma.esm.js
+│   │   │   │   └── sigma.min.js
+│   │   │   ├── LICENSE.txt
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   ├── rendering
+│   │   │   │   ├── dist
+│   │   │   │   │   ├── sigma-rendering.cjs.d.mts
+│   │   │   │   │   ├── sigma-rendering.cjs.d.ts
+│   │   │   │   │   ├── sigma-rendering.cjs.dev.js
+│   │   │   │   │   ├── sigma-rendering.cjs.js
+│   │   │   │   │   ├── sigma-rendering.cjs.mjs
+│   │   │   │   │   ├── sigma-rendering.cjs.prod.js
+│   │   │   │   │   └── sigma-rendering.esm.js
+│   │   │   │   └── package.json
+│   │   │   ├── settings
+│   │   │   │   ├── dist
+│   │   │   │   │   ├── sigma-settings.cjs.d.mts
+│   │   │   │   │   ├── sigma-settings.cjs.d.ts
+│   │   │   │   │   ├── sigma-settings.cjs.dev.js
+│   │   │   │   │   ├── sigma-settings.cjs.js
+│   │   │   │   │   ├── sigma-settings.cjs.mjs
+│   │   │   │   │   ├── sigma-settings.cjs.prod.js
+│   │   │   │   │   └── sigma-settings.esm.js
+│   │   │   │   └── package.json
+│   │   │   ├── types
+│   │   │   │   ├── dist
+│   │   │   │   │   ├── sigma-types.cjs.d.mts
+│   │   │   │   │   ├── sigma-types.cjs.d.ts
+│   │   │   │   │   ├── sigma-types.cjs.dev.js
+│   │   │   │   │   ├── sigma-types.cjs.js
+│   │   │   │   │   ├── sigma-types.cjs.mjs
+│   │   │   │   │   ├── sigma-types.cjs.prod.js
+│   │   │   │   │   └── sigma-types.esm.js
+│   │   │   │   └── package.json
+│   │   │   └── utils
+│   │   │       ├── dist
+│   │   │       │   ├── sigma-utils.cjs.d.mts
+│   │   │       │   ├── sigma-utils.cjs.d.ts
+│   │   │       │   ├── sigma-utils.cjs.dev.js
+│   │   │       │   ├── sigma-utils.cjs.js
+│   │   │       │   ├── sigma-utils.cjs.mjs
+│   │   │       │   ├── sigma-utils.cjs.prod.js
+│   │   │       │   └── sigma-utils.esm.js
+│   │   │       └── package.json
+│   │   ├── source-map-js
+│   │   │   ├── lib
+│   │   │   │   ├── array-set.js
+│   │   │   │   ├── base64-vlq.js
+│   │   │   │   ├── base64.js
+│   │   │   │   ├── binary-search.js
+│   │   │   │   ├── mapping-list.js
+│   │   │   │   ├── quick-sort.js
+│   │   │   │   ├── source-map-consumer.d.ts
+│   │   │   │   ├── source-map-consumer.js
+│   │   │   │   ├── source-map-generator.d.ts
+│   │   │   │   ├── source-map-generator.js
+│   │   │   │   ├── source-node.d.ts
+│   │   │   │   ├── source-node.js
+│   │   │   │   └── util.js
+│   │   │   ├── LICENSE
+│   │   │   ├── package.json
+│   │   │   ├── README.md
+│   │   │   ├── source-map.d.ts
+│   │   │   └── source-map.js
+│   │   └── vite
+│   │       ├── bin
+│   │       │   ├── openChrome.applescript
+│   │       │   └── vite.js
+│   │       ├── client.d.ts
+│   │       ├── dist
+│   │       │   ├── client
+│   │       │   │   ├── client.mjs
+│   │       │   │   └── env.mjs
+│   │       │   ├── node
+│   │       │   │   ├── chunks
+│   │       │   │   │   ├── dep-BB45zftN.js
+│   │       │   │   │   ├── dep-BK3b2jBa.js
+│   │       │   │   │   ├── dep-D-7KCb9p.js
+│   │       │   │   │   ├── dep-Dnp7gl8U.js
+│   │       │   │   │   └── dep-IQS-Za7F.js
+│   │       │   │   ├── cli.js
+│   │       │   │   ├── constants.js
+│   │       │   │   ├── index.d.ts
+│   │       │   │   ├── index.js
+│   │       │   │   ├── runtime.d.ts
+│   │       │   │   ├── runtime.js
+│   │       │   │   └── types.d-aGj9QkWt.d.ts
+│   │       │   └── node-cjs
+│   │       │       └── publicUtils.cjs
+│   │       ├── index.cjs
+│   │       ├── index.d.cts
+│   │       ├── LICENSE.md
+│   │       ├── package.json
+│   │       ├── README.md
+│   │       └── types
+│   │           ├── customEvent.d.ts
+│   │           ├── hmrPayload.d.ts
+│   │           ├── hot.d.ts
+│   │           ├── import-meta.d.ts
+│   │           ├── importGlob.d.ts
+│   │           ├── importMeta.d.ts
+│   │           ├── metadata.d.ts
+│   │           └── package.json
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── plots
+│   │   ├── barplot.js
+│   │   ├── bubbleplot.js
+│   │   ├── circleplot.js
+│   │   ├── dotplot.js
+│   │   ├── heatmap.js
+│   │   └── sankey.js
+│   ├── sigma.min.js
+│   ├── src
+│   │   ├── heatmap_matrix.js
+│   │   ├── highlighting.js
+│   │   ├── main.js
+│   │   ├── network_bck.js
+│   │   ├── network.js
+│   │   └── utils_plot.js
+│   ├── tables.js
+│   ├── utils_plot.js
+│   ├── utils.js
+│   └── vite.config.js
+├── js.txt
+└── README.md
+
+242 directories, 1492 files
