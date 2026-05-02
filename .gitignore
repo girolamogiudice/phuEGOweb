@@ -1,0 +1,34 @@
+# Runtime folders created by py4web/Docker.
+support_data/
+results/
+databases/
+uploads/
+__pycache__/
+
+# JavaScript dependencies and build caches.
+static/js/node_modules/
+static/js/src/node_modules/
+
+# Python/cache files.
+**/__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Large distribution artifacts belong on Zenodo, not in git.
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+phuegoweb-local.tar
+phuEGOweb.tar
+phuEGOweb-tester-package.tar
+
+# Local/editor/OS metadata.
+.DS_Store
+._*
+.vscode/
+.idea/
+
+# Local logs.
+*.log
