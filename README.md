@@ -6,12 +6,24 @@ This repository is intended for source code and Docker build/run documentation. 
 
 ## Docker Quick Start
 
-The easiest testing workflow is to use a prebuilt Docker image tar from Zenodo, then let the setup page download the support-data networks.
+The easiest testing workflow is to use the prebuilt Docker bundle from Zenodo, then let the setup page download the support-data networks.
+
+Download:
+
+```text
+https://zenodo.org/records/19926624/files/phuEGOweb.tar?download=1
+```
+
+Then run:
 
 ```bash
+tar -xf phuEGOweb.tar
+cd phuEGOweb-docker
 docker load -i phuegoweb-local.tar
 docker compose up
 ```
+
+Important: `phuEGOweb.tar` is a bundle. Do not run `docker load -i phuEGOweb.tar`. The Docker image inside the bundle is `phuegoweb-local.tar`.
 
 Open:
 
@@ -46,6 +58,8 @@ https://zenodo.org/records/19926624
 
 The setup page downloads and extracts networks into the mounted `support_data` folder.
 
+The same Zenodo record also contains the prebuilt Docker bundle.
+
 ## Runtime Folders
 
 Docker mounts these local folders into the container:
@@ -63,3 +77,7 @@ These folders are runtime data and should not be committed to GitHub.
 ## Status
 
 This is a beta/local workstation distribution suitable for testing, demonstrations, and paper-resource review. It is not yet hardened as a public multi-user web service.
+
+## License
+
+This project is released under the MIT License. See `LICENSE`.
