@@ -6,14 +6,24 @@ phuEGOweb runs the phuEGO pipeline from a local Docker container and stores larg
 
 ## Quick Start
 
-### Option A: use the prebuilt image from Zenodo
+### Option A: use the prebuilt bundle from Zenodo
 
-Download the Docker image tar from Zenodo and place it in the repository root as `phuegoweb-local.tar`, then run:
+Download the Docker bundle from Zenodo:
+
+```text
+https://zenodo.org/records/19926624/files/phuEGOweb.tar?download=1
+```
+
+Then run:
 
 ```bash
+tar -xf phuEGOweb.tar
+cd phuEGOweb-docker
 docker load -i phuegoweb-local.tar
 docker compose up
 ```
+
+Important: `phuEGOweb.tar` is a bundle. Do not run `docker load -i phuEGOweb.tar`. The Docker image inside the bundle is `phuegoweb-local.tar`.
 
 Open:
 
@@ -62,7 +72,7 @@ Support-data networks are hosted on Zenodo. The setup page downloads and extract
 https://zenodo.org/records/19926624
 ```
 
-The Docker image can also be hosted on Zenodo as a separate file. GitHub should contain the code and documentation; large binaries should stay on Zenodo.
+The prebuilt Docker bundle is hosted on the same Zenodo record. GitHub should contain the code and documentation; large binaries should stay on Zenodo.
 
 ## Notes
 
