@@ -238,6 +238,9 @@
         </div>
       </div>
       <div id="input-content" style="display:none;">
+        <p class="help mb-2">
+          Paths are shown as mounted phuEGOweb folders for readability. The saved manifest still stores the internal Docker container paths.
+        </p>
         <pre style="max-height:420px; overflow:auto;"></pre>
       </div>
     </div>
@@ -1782,6 +1785,35 @@ async function fetchJSON(url) {
   return j;
 }
 
+function displayMountedPath(value) {
+  if (typeof value !== "string") return value;
+
+  const appRoot = "/opt/py4web/apps/phuEGOweb";
+  if (!value.startsWith(appRoot)) return value;
+
+  const suffix = value.slice(appRoot.length).replace(/^\/+/, "");
+  if (!suffix) return "[phuEGOweb folder]";
+
+  if (suffix === "results" || suffix === "results/") return "[results folder]/";
+  if (suffix.startsWith("results/")) return `[results folder]/${suffix.slice("results/".length)}`;
+
+  if (suffix === "support_data" || suffix === "support_data/") return "[support_data folder]/";
+  if (suffix.startsWith("support_data/")) return `[support_data folder]/${suffix.slice("support_data/".length)}`;
+
+  if (suffix === "databases" || suffix === "databases/") return "[databases folder]/";
+  if (suffix.startsWith("databases/")) return `[databases folder]/${suffix.slice("databases/".length)}`;
+
+  if (suffix === "uploads" || suffix === "uploads/") return "[uploads folder]/";
+  if (suffix.startsWith("uploads/")) return `[uploads folder]/${suffix.slice("uploads/".length)}`;
+
+  return `[phuEGOweb folder]/${suffix}`;
+}
+
+function displayInputParameters(params) {
+  const replacer = (_key, value) => displayMountedPath(value);
+  return JSON.stringify(params, replacer, 2);
+}
+
 function waitForNetworkReady() {
   return new Promise((resolve) => {
     const tick = () => {
@@ -2505,7 +2537,7 @@ function populateHeaderAndMetrics(d) {
 
   if (manifest.input_parameters) {
     inputBox.style.display = "";
-    inputPre.textContent = JSON.stringify(manifest.input_parameters, null, 2);
+    inputPre.textContent = displayInputParameters(manifest.input_parameters);
   } else {
     inputBox.style.display = "none";
   }

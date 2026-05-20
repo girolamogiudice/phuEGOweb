@@ -48,9 +48,13 @@ SUPPORT_DATA_ROOT = APP_FOLDER / "support_data"
 SETUP_DOWNLOADS = {}
 SETUP_DOWNLOADS_LOCK = threading.Lock()
 
+RESNIK_KDE_NETWORK = "IntAct_045_resnik"
+KDE_FIXED_OPTIONS = ["0.75", "0.80", "0.85", "0.9", "0.95"]
+KDE_ALL_OPTIONS = ["Optimal", *KDE_FIXED_OPTIONS]
+
 REANALYSIS_OPTIONS = {
     "first_propagation_significance": [0.01, 0.05, 0.1],
-    "kde_probability": ["Optimal", "0.75", "0.80", "0.85", "0.9", "0.95"],
+    "kde_probability": KDE_ALL_OPTIONS,
     "zscore": [1.04, 1.28, 1.64, 2.33],
     "second_propagation_damping": [0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95],
     "minimum_ego_nodes": list(range(1, 10)),
@@ -556,6 +560,26 @@ def write_submission_files(uuid, experiments, form_vars, layer_mode):
         exp_folder.mkdir(exist_ok=True)
 
 
+def kde_options_for_network(network_type):
+    if str(network_type) == RESNIK_KDE_NETWORK:
+        return KDE_ALL_OPTIONS
+    return KDE_FIXED_OPTIONS
+
+
+def default_kde_for_network(network_type):
+    return "Optimal" if str(network_type) == RESNIK_KDE_NETWORK else "0.95"
+
+
+def validate_kde_for_network(form_vars):
+    network_type = str(form_vars.get("network_type", ""))
+    kde = str(form_vars.get("kde_probability", ""))
+    if kde not in set(kde_options_for_network(network_type)):
+        raise ValueError(
+            "KDE Optimal is currently available only for IntAct_045_resnik. "
+            "Please select a fixed KDE probability for the selected network."
+        )
+
+
 def network_label_from_config(config):
     support_path = str(config.get("support_data_folder", ""))
     support_name = Path(support_path).name
@@ -618,8 +642,9 @@ def parse_reanalysis_config(request_vars, original_config):
 
     values["rwr_threshold"] = require_option("first_propagation_significance", float)
 
+    network_type = network_label_from_config(original_config)
     kde = str(request_vars.get("kde_probability", "")).strip()
-    if kde not in {str(v) for v in REANALYSIS_OPTIONS["kde_probability"]}:
+    if kde not in set(kde_options_for_network(network_type)):
         raise ValueError(f"Invalid value for kde_probability: {kde}")
     values["kde_cutoff"] = kde.lower()
 
@@ -722,9 +747,13 @@ def refresh_network_form_options():
     )
 
     for table_name in ("submissions", "scsubmissions", "custom_submissions"):
-        field = db[table_name].network_type
-        field.requires = IS_IN_SET(choices or [default])
-        field.default = default
+        network_field = db[table_name].network_type
+        network_field.requires = IS_IN_SET(choices or [default])
+        network_field.default = default
+
+        kde_field = db[table_name].kde_probability
+        kde_field.requires = IS_IN_SET(KDE_ALL_OPTIONS, zero=None)
+        kde_field.default = default_kde_for_network(default)
 
 
 def setup_network_by_key(key):
@@ -1032,6 +1061,10 @@ def retrieve_detail(uuid):
 
     config = manifest.get("config", {})
     form_values = reanalysis_form_values(config)
+    options = dict(REANALYSIS_OPTIONS)
+    options["kde_probability"] = kde_options_for_network(network_label_from_config(config))
+    if form_values["kde_probability"] not in options["kde_probability"]:
+        form_values["kde_probability"] = default_kde_for_network(network_label_from_config(config))
     message = "Review the previous submission or launch a reanalysis."
     error = None
 
@@ -1069,7 +1102,7 @@ def retrieve_detail(uuid):
         experiments=manifest.get("experiments", []),
         input_text=input_text,
         form_values=form_values,
-        options=REANALYSIS_OPTIONS,
+        options=options,
         message=message,
         error=error,
         json=json,
@@ -1106,6 +1139,12 @@ def submit():
                 form=form,
                 message=f"Input validation failed: {e}"
             )
+
+        try:
+            validate_kde_for_network(form.vars)
+        except ValueError as e:
+            form.errors["kde_probability"] = str(e)
+            return dict(form=form, message=str(e))
 
         new_uuid = str(uuidlib.uuid4())
 
@@ -1181,6 +1220,12 @@ def sc_submit():
                 message="Input validation failed"
             )
 
+        try:
+            validate_kde_for_network(form.vars)
+        except ValueError as e:
+            form.errors["kde_probability"] = str(e)
+            return dict(form=form, message=str(e))
+
         new_uuid = str(uuidlib.uuid4())
 
         try:
@@ -1253,6 +1298,12 @@ def custom_submit():
                 form=form,
                 message="Input validation failed"
             )
+
+        try:
+            validate_kde_for_network(form.vars)
+        except ValueError as e:
+            form.errors["kde_probability"] = str(e)
+            return dict(form=form, message=str(e))
 
         new_uuid = str(uuidlib.uuid4())
 
