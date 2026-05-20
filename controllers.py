@@ -687,7 +687,7 @@ def create_reanalysis_submission(source_uuid, new_config):
         dst_exp = new_root / exp_name
         dst_exp.mkdir(parents=True, exist_ok=True)
 
-        for filename in ("rwr_scores.txt", "pvalues.txt"):
+        for filename in ("rwr_scores.txt", "pvalues.txt", "permutation_counts.txt"):
             src_file = src_exp / filename
             if src_file.exists():
                 shutil.copy2(src_file, dst_exp / filename)

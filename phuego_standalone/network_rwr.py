@@ -16,6 +16,20 @@ from phuego_standalone.io.cancel import raise_if_cancelled
 # Utilities
 # --------------------------------------------------
 
+def _count_threshold_from_pvalue(threshold, n_permutations=1000):
+    """Convert p < threshold to the equivalent strict permutation-count cutoff."""
+    return int(round((1.0 - float(threshold)) * int(n_permutations)))
+
+
+def _pvalue_text_from_count(count, n_permutations=1000):
+    """Format exact empirical p-value text from an integer permutation count."""
+    n_permutations = int(n_permutations)
+    count = int(count)
+    if count >= n_permutations:
+        return "0"
+    value = (n_permutations - count) / n_permutations
+    return f"{value:.12g}"
+
 def flatten_seed_layers(seeds_layers, direction, layout):
     """
     Flatten seed layers for a given direction ("pos" or "neg").
@@ -207,7 +221,10 @@ def pvalue_split(
     enforce_unique=True,
 ):
     """
-    Reads pvalues.txt and selects genes with p <= rwr_threshold.
+    Prefer integer permutation_counts.txt and select genes with the strict
+    count cutoff equivalent to p < rwr_threshold. Fall back to legacy
+    pvalues.txt only for older cached runs.
+
     Also returns raw overlap BEFORE enforcing uniqueness.
     """
     res_folder = Path(res_folder)
@@ -216,21 +233,36 @@ def pvalue_split(
     pvalues_neg = set(seeds_neg.keys())
 
     threshold = float(rwr_threshold)
+    count_threshold = _count_threshold_from_pvalue(threshold)
 
     pos_slice = layout.slice_for("pos")
     neg_slice = layout.slice_for("neg")
 
-    with open(res_folder / "pvalues.txt") as f:
-        next(f)
-        for line in f:
-            gene, *vals = line.strip().split("\t")
-            vals = np.asarray(vals, dtype=float)
+    pcount_file = res_folder / "permutation_counts.txt"
+    if pcount_file.exists():
+        with open(pcount_file) as f:
+            next(f)
+            for line in f:
+                gene, *vals = line.strip().split("\t")
+                vals = np.asarray(vals, dtype=int)
 
-            if vals[pos_slice].min() < threshold:
-                pvalues_pos.add(gene)
+                if vals[pos_slice].max() > count_threshold:
+                    pvalues_pos.add(gene)
 
-            if vals[neg_slice].min() < threshold:
-                pvalues_neg.add(gene)
+                if vals[neg_slice].max() > count_threshold:
+                    pvalues_neg.add(gene)
+    else:
+        with open(res_folder / "pvalues.txt") as f:
+            next(f)
+            for line in f:
+                gene, *vals = line.strip().split("\t")
+                vals = np.asarray(vals, dtype=float)
+
+                if vals[pos_slice].min() < threshold:
+                    pvalues_pos.add(gene)
+
+                if vals[neg_slice].min() < threshold:
+                    pvalues_neg.add(gene)
 
     # 🔥 capture overlap BEFORE filtering
     raw_overlap = pvalues_pos.intersection(pvalues_neg)
@@ -381,12 +413,6 @@ def rwr_values_batch(
         pcount += (empirical_rwr > rand_rwr).astype(np.int32)
 
     # --------------------------------------------------
-    # Convert to p-values
-    # --------------------------------------------------
-
-    pvals = 1.0 - (pcount.astype(np.float32) / float(n_permutations))
-
-    # --------------------------------------------------
     # Write per experiment
     # --------------------------------------------------
 
@@ -394,7 +420,7 @@ def rwr_values_batch(
 
     for exp_name, seed_data, n_slots_exp in exp_slot_counts:
         rwr_slice = empirical_rwr[slot_idx:slot_idx + n_slots_exp]
-        pval_slice = pvals[slot_idx:slot_idx + n_slots_exp]
+        pcount_slice = pcount[slot_idx:slot_idx + n_slots_exp]
 
         exp_folder = Path(res_folder) / exp_name
         exp_folder.mkdir(parents=True, exist_ok=True)
@@ -411,7 +437,14 @@ def rwr_values_batch(
         with open(exp_folder / "pvalues.txt", "w") as f:
             f.write(header)
             for j, name in enumerate(aligned_nodes):
-                vals = pval_slice[:, j]
+                vals = pcount_slice[:, j]
+                pvals = [_pvalue_text_from_count(v, n_permutations) for v in vals]
+                f.write(name + "\t" + "\t".join(pvals) + "\n")
+
+        with open(exp_folder / "permutation_counts.txt", "w") as f:
+            f.write(header)
+            for j, name in enumerate(aligned_nodes):
+                vals = pcount_slice[:, j]
                 f.write(name + "\t" + "\t".join(map(str, vals)) + "\n")
 
         slot_idx += n_slots_exp
