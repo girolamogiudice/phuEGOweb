@@ -24,3 +24,8 @@ networks:
     folder: support_data_intact_045
     enabled: false
     zenodo_url: https://zenodo.org/records/19926624/files/support_data_intact_045.tar?download=1
+
+  IntAct_045_resnik:
+    folder: support_data_intact_045_resnik
+    enabled: false
+    zenodo_url: https://zenodo.org/records/19926624/files/support_data_intact_045_resnik.tar?download=1
