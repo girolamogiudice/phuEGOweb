@@ -53,12 +53,22 @@ def build_kde_signature_network(
     title: str,
 ) -> ig.Graph:
     """Derive KDE signature network from a direction-specific RWR network."""
-    kde_net = rwr_network.induced_subgraph(list(signature_nodes))
+    nodes = list(signature_nodes)
+    if not nodes:
+        kde_net = ig.Graph()
+        kde_net["title"] = title
+        return kde_net
+
+    kde_net = rwr_network.induced_subgraph(nodes)
     kde_net["title"] = title
     return kde_net
 
 
 def build_module_network(kde_network, nodes_by_module, title):
+    if kde_network.vcount() == 0:
+        module_net = ig.Graph()
+        module_net["title"] = title
+        return module_net
 
     kde_nodes = set(kde_network.vs["name"])
 
@@ -67,6 +77,10 @@ def build_module_network(kde_network, nodes_by_module, title):
         all_nodes.update(nodes)
 
     valid_nodes = [n for n in all_nodes if n in kde_nodes]
+    if not valid_nodes:
+        module_net = ig.Graph()
+        module_net["title"] = title
+        return module_net
 
     module_net = kde_network.induced_subgraph(valid_nodes)
     module_net["title"] = title

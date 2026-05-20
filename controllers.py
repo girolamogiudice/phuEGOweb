@@ -49,7 +49,7 @@ SETUP_DOWNLOADS = {}
 SETUP_DOWNLOADS_LOCK = threading.Lock()
 
 RESNIK_KDE_NETWORK = "IntAct_045_resnik"
-KDE_FIXED_OPTIONS = ["0.75", "0.80", "0.85", "0.9", "0.95"]
+KDE_FIXED_OPTIONS = ["0.5", "0.55", "0.6", "0.65", "0.7", "0.75", "0.80", "0.85", "0.9", "0.95"]
 KDE_ALL_OPTIONS = ["Optimal", *KDE_FIXED_OPTIONS]
 
 REANALYSIS_OPTIONS = {
@@ -567,7 +567,7 @@ def kde_options_for_network(network_type):
 
 
 def default_kde_for_network(network_type):
-    return "Optimal" if str(network_type) == RESNIK_KDE_NETWORK else "0.95"
+    return "Optimal" if str(network_type) == RESNIK_KDE_NETWORK else "0.85"
 
 
 def validate_kde_for_network(form_vars):

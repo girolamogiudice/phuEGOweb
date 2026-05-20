@@ -270,6 +270,22 @@ def ego_filtering(
 
     seed_set = set(seeds.keys()) if isinstance(seeds, dict) else set(seeds)
     seed_nodes = list(seed_set.intersection(set(nodes)))
+
+    if not seed_nodes or subnet.vcount() == 0:
+        empty_key = "optimal" if isinstance(kde_cutoff, str) and kde_cutoff == "optimal" else float(kde_cutoff)
+        empty_nodes_kde = {empty_key: {}}
+        return write_results(
+            nodes_kde=empty_nodes_kde,
+            seed_nodes=seed_nodes,
+            kde_cutoff=kde_cutoff,
+            direction=direction,
+            uniprot_to_gene=uniprot_to_gene,
+            geneset_path=geneset_path,
+            fisher_geneset=fisher_geneset,
+            fisher_threshold=fisher_threshold,
+            propagation_value=propagation_value,
+            runtime_paths=runtime_paths,
+        )
     
     if isinstance(kde_cutoff, str) and kde_cutoff == "optimal":
         kde_values_to_run = list(np.arange(0, 1, 0.01).round(2))
@@ -304,6 +320,22 @@ def ego_filtering(
     
             kde_signature_nodes[kde] = signature
             kde_isolated_nodes[kde] = isolated
+
+        if not any(kde_signature_nodes.values()):
+            nodes_kde = {"optimal": {}}
+            kde_cutoff = "optimal"
+            return write_results(
+                nodes_kde=nodes_kde,
+                seed_nodes=seed_nodes,
+                kde_cutoff=kde_cutoff,
+                direction=direction,
+                uniprot_to_gene=uniprot_to_gene,
+                geneset_path=geneset_path,
+                fisher_geneset=fisher_geneset,
+                fisher_threshold=fisher_threshold,
+                propagation_value=propagation_value,
+                runtime_paths=runtime_paths,
+            )
     
         kdeopt = KDEoptimization(
             signatures_dict=kde_signature_nodes,

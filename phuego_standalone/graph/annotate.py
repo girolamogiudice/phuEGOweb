@@ -30,6 +30,9 @@ def annotate_module_membership(
     prefix: str = "",
 ) -> None:
     """Annotate per-module membership flags on nodes."""
+    if graph.vcount() == 0:
+        return
+
     names = np.array(graph.vs["name"], dtype=object)
     for module_name, nodes in sorted(nodes_by_module.items()):
         attr = f"{prefix}{module_name}" if prefix else module_name
