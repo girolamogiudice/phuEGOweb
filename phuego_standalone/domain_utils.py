@@ -55,19 +55,23 @@ def resolve_support_paths(cfg: RunConfig) -> SupportPaths:
     support = Path(add_trailing_slash(cfg.support_data_folder))
     results_root = Path(add_trailing_slash(cfg.result_folder))
 
-    # ---- Update these filenames if your support folder differs ----
-    # (I am aligning them to what your current code expects.)
     networks_folder = support / "networks"
+    network_prefix = "gic"
+    sim_folder_name = "gic_sim"
+
+    if (networks_folder / "resnikbma.pickle").exists():
+        network_prefix = "resnikbma"
+        sim_folder_name = "resnikbma_sim"
 
     return SupportPaths(
         support_folder=support,
-        network_ncol_path=networks_folder / "gic.pickle",
-        network_raw_path=networks_folder / "gic_raw.pickle",
-        network_random_path=networks_folder / "gic_random",
+        network_ncol_path=networks_folder / f"{network_prefix}.pickle",
+        network_raw_path=networks_folder / f"{network_prefix}_raw.pickle",
+        network_random_path=networks_folder / f"{network_prefix}_random",
         gene_name_path=support / "uniprot_to_gene.tab",
         geneset_path=support / "genesets",
         sim_mean_std_path=support / "semsim_mean_std.txt",
-        sim_all_folder_path=support / "gic_sim",
+        sim_all_folder_path=support / sim_folder_name,
         results_root=results_root,
     )
 
