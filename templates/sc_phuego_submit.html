@@ -25,3 +25,32 @@
     </div>
   </div>
 </section>
+
+<script>
+(() => {
+  const RESNIK_NETWORK = "IntAct_045_resnik";
+  const network = document.querySelector('select[name="network_type"], select[name$=".network_type"], select[name$="_network_type"]');
+  const kde = document.querySelector('select[name="kde_probability"], select[name$=".kde_probability"], select[name$="_kde_probability"]');
+  if (!network || !kde) return;
+
+  const optimalOption = Array.from(kde.options).find(option => option.value === "Optimal");
+  const optimalTemplate = optimalOption ? optimalOption.cloneNode(true) : new Option("Optimal", "Optimal");
+
+  function syncKdeOptions() {
+    const allowOptimal = network.value === RESNIK_NETWORK;
+    const currentOptimal = Array.from(kde.options).find(option => option.value === "Optimal");
+
+    if (allowOptimal && !currentOptimal) {
+      kde.insertBefore(optimalTemplate.cloneNode(true), kde.firstChild);
+    }
+
+    if (!allowOptimal && currentOptimal) {
+      if (kde.value === "Optimal") kde.value = "0.95";
+      currentOptimal.remove();
+    }
+  }
+
+  network.addEventListener("change", syncKdeOptions);
+  syncKdeOptions();
+})();
+</script>
