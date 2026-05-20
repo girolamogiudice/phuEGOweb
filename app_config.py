@@ -18,6 +18,11 @@ FALLBACK_NETWORKS = {
         "enabled": True,
         "zenodo_url": "https://zenodo.org/records/19926624/files/support_data_string700.tar?download=1",
     },
+    "IntAct_045_resnik": {
+        "folder": "support_data_intact_045_resnik",
+        "enabled": False,
+        "zenodo_url": "https://zenodo.org/records/19926624/files/support_data_intact_045_resnik.tar?download=1",
+    },
 }
 
 NETWORK_ZENODO_URLS = {
@@ -26,6 +31,7 @@ NETWORK_ZENODO_URLS = {
     "String900": "https://zenodo.org/records/19926624/files/support_data_string900.tar?download=1",
     "IntAct": "https://zenodo.org/records/19926624/files/support_data_intact.tar?download=1",
     "IntAct_045": "https://zenodo.org/records/19926624/files/support_data_intact_045.tar?download=1",
+    "IntAct_045_resnik": "https://zenodo.org/records/19926624/files/support_data_intact_045_resnik.tar?download=1",
 }
 
 
