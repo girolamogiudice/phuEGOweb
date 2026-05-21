@@ -58,7 +58,7 @@ def _build_reset_vectors(
 
     n_slots = layout.total_slots()
     n_nodes = graph.vcount()
-    resets = np.zeros((n_slots, n_nodes), dtype=np.float32)
+    resets = np.zeros((n_slots, n_nodes), dtype=np.float64)
 
     npos = int(layout.layers_per_direction["pos"])
 
@@ -100,9 +100,9 @@ def _graph_to_transition_t(graph: ig.Graph) -> sparse.csr_matrix:
 
     weights_attr = graph.es["weight"] if "weight" in graph.es.attributes() else None
     if weights_attr is None:
-        weights = np.ones(len(edges), dtype=np.float32)
+        weights = np.ones(len(edges), dtype=np.float64)
     else:
-        weights = np.asarray(weights_attr, dtype=np.float32)
+        weights = np.asarray(weights_attr, dtype=np.float64)
 
     deg = np.zeros(n, dtype=np.float64)
 
@@ -126,9 +126,9 @@ def _graph_to_transition_t(graph: ig.Graph) -> sparse.csr_matrix:
         data.append(w / deg[v])
 
     mat = sparse.csr_matrix(
-        (np.asarray(data, dtype=np.float32), (rows, cols)),
+        (np.asarray(data, dtype=np.float64), (rows, cols)),
         shape=(n, n),
-        dtype=np.float32,
+        dtype=np.float64,
     )
     return mat
 
@@ -141,26 +141,31 @@ def _pagerank_multi_slot_power(
     tol: float = 1e-8,
 ) -> np.ndarray:
     """
-    Compute personalized PageRank for all slots simultaneously.
-    Returns array of shape (n_slots, n_nodes)
+    Compute personalized PageRank for all slots with igraph.
+
+    This matches the global/standalone reference backend. The vectorized
+    power-iteration implementation is faster for large batches, but it can
+    flip borderline permutation counts relative to igraph/global results.
     """
     n_slots, n_nodes = resets.shape
     if n_slots == 0 or n_nodes == 0:
-        return np.zeros_like(resets, dtype=np.float32)
+        return np.zeros_like(resets, dtype=np.float64)
 
-    reset_mat = resets.T.astype(np.float32, copy=False)  # (n_nodes, n_slots)
-    M = _graph_to_transition_t(graph)
+    weights = graph.es["weight"] if "weight" in graph.es.attributes() else None
+    scores = np.zeros((n_slots, n_nodes), dtype=np.float64)
 
-    R = reset_mat.copy()
+    for slot_idx in range(n_slots):
+        reset = np.asarray(resets[slot_idx], dtype=np.float64)
+        if reset.sum() <= 0:
+            continue
 
-    for _ in range(max_iter):
-        R_new = damping * (M @ R) + (1.0 - damping) * reset_mat
-        diff = np.max(np.abs(R_new - R))
-        R = R_new
-        if diff < tol:
-            break
+        scores[slot_idx] = graph.personalized_pagerank(
+            reset=reset.tolist(),
+            damping=float(damping),
+            weights=weights,
+        )
 
-    return R.T.astype(np.float32, copy=False)
+    return scores
 
 
 # --------------------------------------------------
@@ -342,7 +347,7 @@ def rwr_values_batch(
         resets_list.append(resets)
         exp_slot_counts.append((exp_name, seed_data, resets.shape[0]))
 
-    resets_all = np.vstack(resets_list).astype(np.float32)
+    resets_all = np.vstack(resets_list).astype(np.float64)
     n_slots = resets_all.shape[0]
 
     # --------------------------------------------------
