@@ -10,6 +10,12 @@ services:
       PY4WEB_PASSWORD: phuegoweb
       MPLCONFIGDIR: /tmp/matplotlib
       XDG_CACHE_HOME: /tmp
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      BLIS_NUM_THREADS: "1"
     volumes:
       - ./support_data:/opt/py4web/apps/phuEGOweb/support_data
       - ./results:/opt/py4web/apps/phuEGOweb/results
