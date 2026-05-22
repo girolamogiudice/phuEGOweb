@@ -86,11 +86,6 @@ def _build_reset_vectors(
             if j is not None:
                 resets[slot_idx, j] = float(weights.get(s, 0.0))
 
-    # normalize each reset vector
-    row_sums = resets.sum(axis=1, keepdims=True)
-    nonzero = row_sums[:, 0] > 0
-    resets[nonzero] /= row_sums[nonzero]
-
     return resets, names
 
 
@@ -164,8 +159,8 @@ def _pagerank_multi_slot_power(
     if n_slots == 0 or n_nodes == 0:
         return np.zeros_like(resets, dtype=np.float64)
 
-    weights = graph.es["weight"] if "weight" in graph.es.attributes() else None
     scores = np.zeros((n_slots, n_nodes), dtype=np.float64)
+    weights = "weight" if "weight" in graph.es.attributes() else None
 
     for slot_idx in range(n_slots):
         reset = np.asarray(resets[slot_idx], dtype=np.float64)
@@ -174,8 +169,10 @@ def _pagerank_multi_slot_power(
 
         scores[slot_idx] = graph.personalized_pagerank(
             reset=reset.tolist(),
+            directed=False,
             damping=float(damping),
             weights=weights,
+            implementation="prpack",
         )
 
     return scores
