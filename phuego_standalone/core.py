@@ -163,10 +163,6 @@ def phuego(
 
     shared_root = Path(support_data_folder).parent
     ot_path = shared_root / "opentargets_lookup.pkl"
-    
-    print("DEBUG OT path:", ot_path)
-    print("DEBUG exists:", ot_path.exists())
-    
     ot_lookup = load_opentargets_lookup(ot_path)
 
     try:

@@ -207,10 +207,6 @@ def write_results(
         kde_value = float(kde_cutoff)
         kde_key = f"{kde_value}".rstrip("0").rstrip(".")
         nodes_kde_lookup = nodes_kde.get(kde_value, {})
-    print ('direction:', direction)
-    print("kde_cutoff:", kde_cutoff)
-    print("nodes_kde_lookup size:", len(nodes_kde_lookup))
-
     dirs = get_kde_result_dirs(runtime_paths, direction, kde_key)
     supernodes[kde_key] = {}
     fisher_proteins = set()
